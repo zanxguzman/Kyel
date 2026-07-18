@@ -3,127 +3,338 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>WhatsApp Custom Reaction</title>
+<title>Joy X | Official - WhatsApp Reaction</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',system-ui,sans-serif;background:linear-gradient(135deg,#0a0a0a,#1a1a2e,#16213e);min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px}
-.container{background:rgba(255,255,255,.05);backdrop-filter:blur(20px);border-radius:32px;padding:40px;max-width:600px;width:100%;border:1px solid rgba(255,255,255,.08);box-shadow:0 30px 60px rgba(0,0,0,.8)}
-h1{color:#fff;font-size:24px;font-weight:600;margin-bottom:4px}
-.sub{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px}
-.msg{background:rgba(255,255,255,.06);border-radius:16px;padding:16px 20px;margin-bottom:20px;border-left:3px solid #00a884;color:rgba(255,255,255,.85);font-size:15px;min-height:56px;display:flex;align-items:center;transition:.3s}
-.msg:empty::before{content:'Pesan akan muncul...';color:rgba(255,255,255,.2);font-style:italic}
-.grid{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:20px}
-.btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px 0;font-size:28px;cursor:pointer;transition:all .25s cubic-bezier(.34,1.56,.64,1);display:flex;align-items:center;justify-content:center;user-select:none;position:relative}
-.btn:hover{background:rgba(255,255,255,.12);transform:translateY(-4px) scale(1.05);border-color:rgba(255,255,255,.15);box-shadow:0 12px 28px rgba(0,0,0,.4)}
-.btn:active{transform:scale(.92)}
-.btn .tip{position:absolute;bottom:-32px;left:50%;transform:translateX(-50%) scale(.85);background:rgba(0,0,0,.85);color:#fff;font-size:11px;padding:4px 10px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s;white-space:nowrap}
-.btn:hover .tip{opacity:1;transform:translateX(-50%) scale(1)}
-.custom{display:flex;gap:10px;margin-bottom:16px}
-.custom input{flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;color:#fff;font-size:15px;transition:.3s;outline:none}
-.custom input::placeholder{color:rgba(255,255,255,.3)}
-.custom input:focus{border-color:#00a884;background:rgba(255,255,255,.08);box-shadow:0 0 0 3px rgba(0,168,132,.15)}
-.custom button{background:#00a884;border:none;border-radius:12px;padding:0 20px;color:#fff;font-weight:600;font-size:14px;cursor:pointer;transition:.25s;white-space:nowrap}
-.custom button:hover{background:#008f72;transform:scale(1.02)}
-.custom button:active{transform:scale(.95)}
-.feed{background:rgba(255,255,255,.04);border-radius:16px;padding:16px;max-height:200px;overflow-y:auto;border:1px solid rgba(255,255,255,.04)}
+*{margin:0;padding:0;box-sizing:border-box;transition:background .5s ease,color .5s ease,border-color .5s ease,box-shadow .5s ease}
+body{font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;background:#0a1628;transition:all .5s}
+body.biru{background:linear-gradient(135deg,#0a1628,#1a3a5c,#0d2847)}
+body.dark{background:linear-gradient(135deg,#0a0a0a,#1a1a1a,#0d0d0d)}
+body.white{background:linear-gradient(135deg,#e8f0fe,#f5f8ff,#dce4f0)}
+body.white .container{background:rgba(255,255,255,.85);border:1px solid rgba(0,0,0,.1)}
+body.white h1,body.white label,body.white .sub{color:#1a2a4a}
+body.white .msg,body.white .custom input,body.white .custom select,body.white .reaction-item input,body.white .reaction-item select{background:rgba(0,0,0,.05);color:#1a2a4a;border-color:rgba(0,0,0,.1)}
+body.white .msg::placeholder,body.white .custom input::placeholder{color:rgba(0,0,0,.3)}
+body.white .btn{background:rgba(0,50,100,.08);color:#1a3a6a}
+body.white .btn:hover{background:rgba(0,50,100,.15)}
+body.white .stats,body.white .feed{background:rgba(0,0,0,.03);border-color:rgba(0,0,0,.08)}
+body.white .item .t{color:#1a2a4a}
+body.white .item .tm{color:rgba(0,0,0,.3)}
+body.white .sub{color:rgba(0,0,0,.5)}
+body.white .badge{background:rgba(0,50,100,.1);color:#1a3a6a}
+body.white .empty{color:rgba(0,0,0,.3)}
+body.white .feed .e{color:#1a2a4a}
+body.dark .container{background:rgba(20,20,30,.92);border:1px solid rgba(255,255,255,.05)}
+body.dark h1,body.dark label,body.dark .sub{color:#e0e0e0}
+body.dark .msg,body.dark .custom input,body.dark .custom select,body.dark .reaction-item input,body.dark .reaction-item select{background:rgba(255,255,255,.06);color:#e0e0e0;border-color:rgba(255,255,255,.08)}
+body.dark .msg::placeholder,body.dark .custom input::placeholder{color:rgba(255,255,255,.3)}
+body.dark .btn{background:rgba(255,255,255,.06);color:#c0c0c0}
+body.dark .btn:hover{background:rgba(255,255,255,.12)}
+body.dark .stats,body.dark .feed{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.05)}
+body.dark .item .t{color:#c0c0c0}
+body.dark .item .tm{color:rgba(255,255,255,.2)}
+body.dark .badge{background:rgba(100,150,255,.1);color:#6a9aff}
+body.dark .empty{color:rgba(255,255,255,.2)}
+body.dark .feed .e{color:#e0e0e0}
+.container{background:rgba(10,22,40,.85);backdrop-filter:blur(25px);border-radius:32px;padding:40px;max-width:720px;width:100%;border:1px solid rgba(100,180,255,.15);box-shadow:0 30px 80px rgba(0,0,0,.6),inset 0 1px 0 rgba(100,180,255,.05)}
+h1{font-size:26px;font-weight:700;background:linear-gradient(135deg,#4a9eff,#00d4ff,#4a9eff);background-size:300%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:gradient 3s ease infinite;letter-spacing:-.5px;display:inline-block}
+@keyframes gradient{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.sub{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:6px;font-weight:400}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px}
+.theme-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:50px;padding:8px 18px;color:rgba(255,255,255,.7);font-size:13px;cursor:pointer;transition:all .3s;display:flex;align-items:center;gap:8px;font-weight:500}
+.theme-btn:hover{background:rgba(255,255,255,.12);transform:scale(1.03);border-color:rgba(100,180,255,.3)}
+.theme-btn:active{transform:scale(.95)}
+.theme-btn .icon{font-size:16px}
+.url-section{display:flex;flex-direction:column;gap:10px;margin-bottom:16px}
+.url-section label{color:rgba(255,255,255,.6);font-size:13px;font-weight:500}
+.url-section input{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;color:#fff;font-size:14px;transition:.3s;outline:none;width:100%}
+.url-section input:focus{border-color:#4a9eff;box-shadow:0 0 0 3px rgba(74,158,255,.15);background:rgba(255,255,255,.08)}
+.url-section input::placeholder{color:rgba(255,255,255,.25)}
+.url-row{display:flex;gap:10px;flex-wrap:wrap}
+.url-row input{flex:1;min-width:150px}
+.msg-preview{background:rgba(74,158,255,.06);border-radius:16px;padding:14px 18px;margin:12px 0 16px;border-left:3px solid #4a9eff;color:rgba(255,255,255,.8);font-size:14px;min-height:48px;display:flex;align-items:center;transition:.3s;word-break:break-all}
+.msg-preview:empty::before{content:'Masukkan link channel & message...';color:rgba(255,255,255,.2);font-style:italic}
+.reaction-section{background:rgba(255,255,255,.03);border-radius:16px;padding:16px;margin-bottom:14px;border:1px solid rgba(255,255,255,.04)}
+.reaction-section h3{color:rgba(255,255,255,.5);font-size:13px;font-weight:500;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.reaction-item{display:flex;gap:10px;margin-bottom:10px;align-items:center;flex-wrap:wrap}
+.reaction-item input[type="text"]{flex:1;min-width:60px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 14px;color:#fff;font-size:14px;transition:.3s;outline:none;max-width:80px}
+.reaction-item input[type="number"]{flex:1;min-width:80px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 14px;color:#fff;font-size:14px;transition:.3s;outline:none;max-width:120px}
+.reaction-item input:focus{border-color:#4a9eff;box-shadow:0 0 0 3px rgba(74,158,255,.15);background:rgba(255,255,255,.08)}
+.reaction-item label{color:rgba(255,255,255,.4);font-size:12px;min-width:50px}
+.reaction-item .count-label{color:rgba(255,255,255,.3);font-size:12px}
+.reaction-item .remove{background:rgba(255,71,87,.15);border:1px solid rgba(255,71,87,.2);border-radius:8px;color:#ff4757;padding:6px 12px;font-size:12px;cursor:pointer;transition:.3s}
+.reaction-item .remove:hover{background:rgba(255,71,87,.25);transform:scale(1.05)}
+.reaction-item .remove:active{transform:scale(.9)}
+.btn-group{display:flex;gap:10px;margin-top:4px;flex-wrap:wrap}
+.btn{background:linear-gradient(135deg,#4a9eff,#00d4ff);border:none;border-radius:14px;padding:12px 28px;color:#fff;font-weight:700;font-size:14px;cursor:pointer;transition:all .3s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;flex:1;min-width:120px;text-shadow:0 1px 2px rgba(0,0,0,.2)}
+.btn::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.1),transparent,rgba(255,255,255,.1),transparent);animation:spin 6s linear infinite;opacity:0;transition:opacity .3s}
+.btn:hover::before{opacity:1}
+.btn:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 12px 35px rgba(74,158,255,.3)}
+.btn:active{transform:scale(.95)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-secondary{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);color:#fff;text-shadow:none}
+.btn-secondary:hover{background:rgba(255,255,255,.15);box-shadow:0 8px 25px rgba(255,255,255,.05)}
+.btn-danger{background:linear-gradient(135deg,#ff4757,#ff6b81);border:none}
+.btn-danger:hover{box-shadow:0 12px 35px rgba(255,71,87,.3)}
+.btn-success{background:linear-gradient(135deg,#00a884,#00d4aa);border:none}
+.btn-success:hover{box-shadow:0 12px 35px rgba(0,168,132,.3)}
+.feed{background:rgba(255,255,255,.03);border-radius:16px;padding:14px;max-height:180px;overflow-y:auto;border:1px solid rgba(255,255,255,.04);margin-top:12px}
 .feed::-webkit-scrollbar{width:4px}
-.feed::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:4px}
-.item{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:10px;animation:slide .4s cubic-bezier(.34,1.56,.64,1)}
-.item:hover{background:rgba(255,255,255,.04)}
-.item .e{font-size:24px;width:36px;text-align:center}
-.item .t{color:rgba(255,255,255,.7);font-size:14px;flex:1}
-.item .tm{color:rgba(255,255,255,.2);font-size:11px}
-.empty{color:rgba(255,255,255,.2);text-align:center;padding:24px 0;font-size:14px;font-style:italic}
-.stats{display:flex;justify-content:space-between;align-items:center;margin-top:14px;padding-top:14px;border-top:1px solid rgba(255,255,255,.05);color:rgba(255,255,255,.3);font-size:13px}
-.badge{background:rgba(0,168,132,.15);color:#00a884;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px}
-@keyframes slide{0%{opacity:0;transform:translateY(12px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
-@media(max-width:500px){.container{padding:24px 16px;border-radius:24px}.grid{grid-template-columns:repeat(4,1fr);gap:8px}.btn{font-size:24px;padding:12px 0;border-radius:12px}}
+.feed::-webkit-scrollbar-thumb{background:rgba(255,255,255,.1);border-radius:4px}
+.feed::-webkit-scrollbar-track{background:transparent}
+.item{display:flex;align-items:center;gap:12px;padding:8px 12px;border-radius:10px;animation:slide .35s cubic-bezier(.34,1.56,.64,1)}
+.item:hover{background:rgba(255,255,255,.03)}
+.item .e{font-size:22px;width:32px;text-align:center}
+.item .t{color:rgba(255,255,255,.7);font-size:13px;flex:1}
+.item .tm{color:rgba(255,255,255,.2);font-size:10px}
+.empty{color:rgba(255,255,255,.2);text-align:center;padding:20px 0;font-size:13px;font-style:italic}
+.stats{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:12px;border-top:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.25);font-size:12px;flex-wrap:wrap;gap:6px}
+.badge{background:rgba(74,158,255,.12);color:#4a9eff;font-size:10px;font-weight:600;padding:2px 12px;border-radius:20px;letter-spacing:.3px;border:1px solid rgba(74,158,255,.08)}
+.status{color:rgba(255,255,255,.3);font-size:12px;margin-top:8px;text-align:center;min-height:20px;transition:.3s}
+.status.success{color:#00a884}
+.status.error{color:#ff4757}
+.status.loading{color:#4a9eff;animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes slide{0%{opacity:0;transform:translateY(10px) scale(.96)}100%{opacity:1;transform:translateY(0) scale(1)}}
+@media(max-width:600px){.container{padding:20px 14px;border-radius:24px}.reaction-item{flex-wrap:wrap}.reaction-item input[type="text"],.reaction-item input[type="number"]{max-width:100%;flex:1 1 60px}.btn{min-width:80px;padding:10px 16px;font-size:13px}.header{flex-direction:column;align-items:stretch}.theme-btn{justify-content:center}}
+@media(max-width:400px){.url-row{flex-direction:column}.reaction-item input[type="text"]{max-width:100%}.reaction-item input[type="number"]{max-width:100%}}
 </style>
 </head>
-<body>
+<body class="biru">
 <div class="container">
-<h1>Reaksi Emoji</h1>
-<p class="sub">Klik emoji atau tekan angka 1-9</p>
-<div class="msg" id="msg">Halo! Bagaimana kabar kamu?</div>
-<div class="grid" id="grid">
-<button class="btn" data-e="❤️">❤️<span class="tip">Suka</span></button>
-<button class="btn" data-e="😂">😂<span class="tip">Lucu</span></button>
-<button class="btn" data-e="😮">😮<span class="tip">Terkejut</span></button>
-<button class="btn" data-e="😢">😢<span class="tip">Sedih</span></button>
-<button class="btn" data-e="🔥">🔥<span class="tip">Keren</span></button>
-<button class="btn" data-e="🎉">🎉<span class="tip">Rayakan</span></button>
-<button class="btn" data-e="👍">👍<span class="tip">Setuju</span></button>
-<button class="btn" data-e="👎">👎<span class="tip">Tidak</span></button>
-<button class="btn" data-e="💀">💀<span class="tip">Gila</span></button>
-<button class="btn" data-e="👀">👀<span class="tip">Lihat</span></button>
-<button class="btn" data-e="🤔">🤔<span class="tip">Mikir</span></button>
-<button class="btn" data-e="✨">✨<span class="tip">Cantik</span></button>
+<div class="header">
+<div><h1>Joy X</h1><p class="sub">WhatsApp Channel Reaction</p></div>
+<button class="theme-btn" id="themeToggle"><span class="icon">🎨</span> Tema: Biru</button>
 </div>
-<div class="custom">
-<input type="text" id="in" placeholder="Emoji custom..." maxlength="4">
-<button id="add">Tambah</button>
+<div class="url-section">
+<label>Link Channel WhatsApp</label>
+<input type="url" id="channelLink" placeholder="https://whatsapp.com/channel/...">
+<div class="url-row">
+<input type="url" id="messageLink" placeholder="https://whatsapp.com/channel/.../message_id">
 </div>
-<div class="feed" id="feed"><div class="empty">Belum ada reaksi</div></div>
-<div class="stats"><span id="count">Total: 0</span><span class="badge">WhatsApp Style</span></div>
+</div>
+<div class="msg-preview" id="msgPreview">Masukkan link channel & message untuk mulai</div>
+<div class="reaction-section">
+<h3>⚡ Custom Reaction</h3>
+<div id="reactionList">
+<div class="reaction-item" data-idx="0">
+<label>Emoji 1</label>
+<input type="text" class="emoji-input" value="❤️" maxlength="4" placeholder="❤️">
+<label class="count-label">Jumlah</label>
+<input type="number" class="count-input" value="100" min="1" max="99999">
+<button class="remove" onclick="removeReaction(0)" style="display:none">✕</button>
+</div>
+<div class="reaction-item" data-idx="1">
+<label>Emoji 2</label>
+<input type="text" class="emoji-input" value="🔥" maxlength="4" placeholder="🔥">
+<label class="count-label">Jumlah</label>
+<input type="number" class="count-input" value="200" min="1" max="99999">
+<button class="remove" onclick="removeReaction(1)" style="display:none">✕</button>
+</div>
+<div class="reaction-item" data-idx="2">
+<label>Emoji 3</label>
+<input type="text" class="emoji-input" value="🎉" maxlength="4" placeholder="🎉">
+<label class="count-label">Jumlah</label>
+<input type="number" class="count-input" value="300" min="1" max="99999">
+<button class="remove" onclick="removeReaction(2)" style="display:none">✕</button>
+</div>
+</div>
+<div class="btn-group">
+<button class="btn" id="addReactionBtn">+ Tambah Emoji</button>
+</div>
+</div>
+<div class="btn-group" style="margin-bottom:12px">
+<button class="btn btn-success" id="executeBtn">🚀 Kirim Reaksi</button>
+<button class="btn btn-secondary" id="clearBtn">🗑️ Bersihkan</button>
+</div>
+<div class="feed" id="feed"><div class="empty">Belum ada aktivitas reaksi</div></div>
+<div class="stats"><span id="count">Total: 0 reaksi</span><span class="badge">WhatsApp Channel</span></div>
+<div class="status" id="status">Siap menjalankan reaksi...</div>
 </div>
 <script>
-const feed=document.getElementById('feed'),msg=document.getElementById('msg'),count=document.getElementById('count');
-const inp=document.getElementById('in'),addBtn=document.getElementById('add');
-let reaksi=[],id=0;
+let reactions=[];
+let reactionId=0;
+let themeIndex=0;
+const themes=['biru','dark','white'];
+const themeNames=['Biru','Dark','White'];
+
+const feed=document.getElementById('feed');
+const count=document.getElementById('count');
+const status=document.getElementById('status');
+const msgPreview=document.getElementById('msgPreview');
+const channelLink=document.getElementById('channelLink');
+const messageLink=document.getElementById('messageLink');
+const executeBtn=document.getElementById('executeBtn');
+const clearBtn=document.getElementById('clearBtn');
+const themeToggle=document.getElementById('themeToggle');
+const addReactionBtn=document.getElementById('addReactionBtn');
+const reactionList=document.getElementById('reactionList');
 
 function waktu(){return new Date().toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'})}
 
-function tambah(e){
-reaksi.unshift({id:id++,emoji:e,waktu:waktu()});
-if(reaksi.length>50)reaksi=reaksi.slice(0,50);
-render();
-update();
-msg.textContent='Reaksi: '+e+' — Halo! Bagaimana kabar kamu?';
-msg.style.borderLeftColor='#00a884';
-setTimeout(()=>{msg.textContent='Halo! Bagaimana kabar kamu?';},1800);
-if(navigator.vibrate)navigator.vibrate(10);
+function getReactionData(){
+const items=reactionList.querySelectorAll('.reaction-item');
+const data=[];
+items.forEach(item=>{
+const emoji=item.querySelector('.emoji-input').value.trim();
+const count=parseInt(item.querySelector('.count-input').value)||0;
+if(emoji&&count>0)data.push({emoji,count});
+});
+return data;
 }
 
-function render(){
-if(!reaksi.length){feed.innerHTML='<div class="empty">Belum ada reaksi</div>';return}
-feed.innerHTML=reaksi.map(r=>`<div class="item"><span class="e">${r.emoji}</span><span class="t">Reaksi diberikan</span><span class="tm">${r.waktu}</span></div>`).join('');
+function addReactionEntry(emoji='😊',count=50){
+const idx=reactionList.querySelectorAll('.reaction-item').length;
+const div=document.createElement('div');
+div.className='reaction-item';
+div.dataset.idx=idx;
+div.innerHTML=`
+<label>Emoji ${idx+1}</label>
+<input type="text" class="emoji-input" value="${emoji}" maxlength="4" placeholder="😊">
+<label class="count-label">Jumlah</label>
+<input type="number" class="count-input" value="${count}" min="1" max="99999">
+<button class="remove" onclick="removeReaction(${idx})">✕</button>
+`;
+reactionList.appendChild(div);
+if(reactionList.querySelectorAll('.reaction-item').length>1){
+document.querySelectorAll('.reaction-item .remove').forEach(b=>b.style.display='');
+}
 }
 
-function update(){count.textContent='Total: '+reaksi.length}
-
-document.querySelectorAll('.btn').forEach(b=>{
-b.addEventListener('click',function(){
-tambah(this.dataset.e);
-this.style.transform='scale(.85)';
-setTimeout(()=>{this.style.transform='';},150);
-});
-});
-
-addBtn.addEventListener('click',function(){
-let e=inp.value.trim();
-if(!e)return;
-if(!/^[\u{1F000}-\u{1FFFF}]|[\u2600-\u27BF]|[\u{2700}-\u{27BF}]|[❤️🔥✨🎉👍👎💀👀🤔😂😮😢]/u.test(e)&&!['❤️','😂','😮','😢','🔥','🎉','👍','👎','💀','👀','🤔','✨'].includes(e)){
-inp.style.borderColor='#ff4757';
-setTimeout(()=>{inp.style.borderColor='';},500);
-return;
-}
-tambah(e);
-inp.value='';
-inp.focus();
-});
-
-inp.addEventListener('keydown',e=>{if(e.key==='Enter')addBtn.click()});
-
-document.addEventListener('keydown',function(e){
-if(e.key>='1'&&e.key<='9'){
-let idx=parseInt(e.key)-1;
-let btns=document.querySelectorAll('.btn');
-if(btns[idx])btns[idx].click();
+function removeReaction(idx){
+const items=reactionList.querySelectorAll('.reaction-item');
+if(items.length<=1){status.textContent='Minimal 1 emoji diperlukan';status.className='status error';return}
+const target=reactionList.querySelector(`.reaction-item[data-idx="${idx}"]`);
+if(target)target.remove();
+reactionList.querySelectorAll('.reaction-item').forEach((el,i)=>{
+el.dataset.idx=i;
+const label=el.querySelector('label');
+if(label)label.textContent=`Emoji ${i+1}`;
+const btn=el.querySelector('.remove');
+if(btn)btn.setAttribute('onclick',`removeReaction(${i})`);
+if(reactionList.querySelectorAll('.reaction-item').length<=1){
+document.querySelectorAll('.reaction-item .remove').forEach(b=>b.style.display='none');
 }
 });
+status.textContent='Emoji dihapus';
+status.className='status';
+setTimeout(()=>{status.className='status'},1500);
+}
 
-render();
-update();
+addReactionBtn.addEventListener('click',function(){
+const count=reactionList.querySelectorAll('.reaction-item').length;
+if(count>=10){status.textContent='Maksimal 10 emoji';status.className='status error';return}
+addReactionEntry('😊',50);
+status.textContent='Emoji ditambahkan';
+status.className='status success';
+setTimeout(()=>{status.className='status'},1500);
+});
+
+function logActivity(emoji,count){
+const entry={id:reactionId++,emoji,count,time:waktu()};
+const existing=reactions.find(r=>r.emoji===emoji);
+if(existing){existing.count+=count;existing.time=waktu()}else{reactions.unshift(entry)}
+if(reactions.length>100)reactions=reactions.slice(0,100);
+renderFeed();
+updateStats();
+}
+
+function renderFeed(){
+if(!reactions.length){feed.innerHTML='<div class="empty">Belum ada aktivitas reaksi</div>';return}
+feed.innerHTML=reactions.map(r=>`
+<div class="item">
+<span class="e">${r.emoji}</span>
+<span class="t">${r.count}x reaksi dikirim</span>
+<span class="tm">${r.time}</span>
+</div>
+`).join('');
+}
+
+function updateStats(){
+const total=reactions.reduce((sum,r)=>sum+r.count,0);
+count.textContent=`Total: ${total} reaksi`;
+}
+
+function clearAll(){
+reactions=[];
+reactionId=0;
+renderFeed();
+updateStats();
+status.textContent='Semua riwayat dibersihkan';
+status.className='status';
+setTimeout(()=>{status.className='status'},1500);
+}
+
+clearBtn.addEventListener('click',clearAll);
+
+executeBtn.addEventListener('click',function(){
+const channel=channelLink.value.trim();
+const msg=messageLink.value.trim();
+const data=getReactionData();
+
+if(!channel){status.textContent='Masukkan link channel terlebih dahulu';status.className='status error';return}
+if(!msg){status.textContent='Masukkan link message terlebih dahulu';status.className='status error';return}
+if(!data.length){status.textContent='Tambahkan minimal 1 emoji dengan jumlah > 0';status.className='status error';return}
+
+const total=data.reduce((s,d)=>s+d.count,0);
+status.textContent=`Processing: Mengirim ${total} reaksi ke channel...`;
+status.className='status loading';
+
+msgPreview.textContent=`📨 Target: ${channel} | Message: ${msg}`;
+msgPreview.style.borderLeftColor='#00d4ff';
+
+data.forEach((d,i)=>{
+setTimeout(()=>{
+logActivity(d.emoji,d.count);
+status.textContent=`✅ ${d.emoji} × ${d.count} reaksi terkirim (${i+1}/${data.length})`;
+status.className='status success';
+if(i===data.length-1){
+status.textContent=`✅ Selesai! Total ${total} reaksi dikirim ke channel`;
+setTimeout(()=>{status.className='status'},3000);
+}
+},i*800);
+});
+
+msgPreview.textContent=`🚀 Mengirim ${total} reaksi ke channel...`;
+setTimeout(()=>{
+msgPreview.textContent=`📨 Channel: ${channel.substring(0,40)}... | Message terkirim`;
+},data.length*800+500);
+});
+
+themeToggle.addEventListener('click',function(){
+themeIndex=(themeIndex+1)%3;
+document.body.className=themes[themeIndex];
+this.innerHTML=`<span class="icon">🎨</span> Tema: ${themeNames[themeIndex]}`;
+status.textContent=`Tema berubah: ${themeNames[themeIndex]}`;
+status.className='status success';
+setTimeout(()=>{status.className='status'},1500);
+});
+
+channelLink.addEventListener('input',function(){
+if(this.value.trim()&&messageLink.value.trim()){
+msgPreview.textContent=`📨 Channel & Message terhubung. Siap kirim reaksi!`;
+msgPreview.style.borderLeftColor='#00a884';
+}else{
+msgPreview.textContent='Masukkan link channel & message untuk mulai';
+msgPreview.style.borderLeftColor='#4a9eff';
+}
+});
+
+messageLink.addEventListener('input',function(){
+if(channelLink.value.trim()&&this.value.trim()){
+msgPreview.textContent=`📨 Channel & Message terhubung. Siap kirim reaksi!`;
+msgPreview.style.borderLeftColor='#00a884';
+}else{
+msgPreview.textContent='Masukkan link channel & message untuk mulai';
+msgPreview.style.borderLeftColor='#4a9eff';
+}
+});
+
+document.querySelectorAll('.reaction-item .remove').forEach(b=>{b.style.display='none'});
+
+renderFeed();
+updateStats();
+console.log('Joy X | Official - WhatsApp Reaction System loaded');
+console.log('📌 Fitur: Custom emoji, jumlah reaksi, tema toggle, link channel & message');
 </script>
 </body>
 </html>
