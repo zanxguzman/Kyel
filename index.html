@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>The Warrior Survival</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--void:#0b0d12;--panel:#151923;--panel-line:#2a3242;--blood:#c23b3b;--steel:#4a7fa6;--amber:#e8b93d;--text:#dfe4ec;--text-dim:#8891a3;--green:#4caf50}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--void);font-family:'Rajdhani',sans-serif;color:var(--text)}
+@media(max-width:768px){html,body{transform:rotate(0deg);width:100vh;height:100vw;overflow:hidden;position:fixed;top:0;left:0}#app{transform:rotate(90deg);transform-origin:center center;width:100vh;height:100vw;position:absolute;top:0;left:0}}
+#app{position:fixed;inset:0;overflow:hidden}
+canvas{display:block}
+.hidden{display:none!important}
+h1,h2,h3{font-family:'Oswald',sans-serif}
+button,input,select,textarea{font-family:inherit;cursor:pointer}
+#loading-screen{position:fixed;inset:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50%30%,#161c26,#0b0d12 70%)}
+#loading-screen .logo{font-family:'Oswald';font-weight:700;font-size:38px;letter-spacing:6px;color:#fff;margin-bottom:6px;text-shadow:0 0 24px rgba(194,59,59,0.5)}
+#loading-screen .logo span{color:var(--blood)}
+.load-sub{font-size:13px;letter-spacing:3px;color:var(--text-dim);margin-bottom:34px}
+.load-track{width:min(280px,70vw);height:6px;background:#1a1f2b;border:1px solid var(--panel-line)}
+.load-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--blood),var(--amber));transition:width .1s linear}
+.load-tip{margin-top:16px;font-size:12px;color:var(--text-dim);letter-spacing:1px}
+#auth-screen{position:fixed;inset:0;z-index:50;display:none;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50%20%,rgba(74,127,166,0.15),transparent 60%),linear-gradient(180deg,#0b0d12,#0e1219 60%,#0b0d12)}
+.auth-card{position:relative;width:min(400px,90vw);max-height:90vh;overflow-y:auto;background:linear-gradient(180deg,var(--panel),#10141c);border:1px solid var(--panel-line);clip-path:polygon(0 12px,12px 0,100% 0,100% calc(100% - 12px),calc(100% - 12px)100%,0 100%);padding:34px 28px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.auth-eyebrow{font-family:'Oswald';font-size:12px;letter-spacing:4px;color:var(--blood);text-transform:uppercase}
+.auth-title{font-family:'Oswald';font-weight:700;font-size:32px;letter-spacing:2px;margin:6px 0 4px;background:linear-gradient(90deg,#fff,#b9c2d1);-webkit-background-clip:text;background-clip:text;color:transparent}
+.auth-sub{font-size:14px;color:var(--text-dim);margin-bottom:20px;line-height:1.5}
+.auth-btn{width:100%;display:flex;align-items:center;gap:12px;justify-content:center;padding:13px 16px;margin-bottom:10px;border-radius:3px;border:1px solid var(--panel-line);background:#1a2029;color:var(--text);font-weight:600;font-size:15px;transition:transform .12s,border-color .12s}
+.auth-btn:active{transform:scale(0.97)}
+.auth-icon{width:18px;height:18px;flex:none}
+.divider{display:flex;align-items:center;gap:10px;margin:18px 0;color:var(--text-dim);font-size:12px;letter-spacing:2px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--panel-line)}
+.field{width:100%;padding:12px 14px;margin-bottom:10px;background:#0e1219;border:1px solid var(--panel-line);color:var(--text);font-size:15px;border-radius:2px;outline:none}
+.field:focus{border-color:var(--steel)}
+.primary-btn{width:100%;padding:13px;margin-top:6px;border:none;background:linear-gradient(90deg,var(--blood),#9c2e2e);color:#fff;font-family:'Oswald';font-weight:700;letter-spacing:2px;font-size:14px;clip-path:polygon(10px 0,100% 0,100% 100%,0 100%,0 10px);transition:filter .2s}
+.primary-btn:active{filter:brightness(0.9)}
+.secondary-btn{padding:13px;background:transparent;border:1px solid var(--panel-line);color:var(--text);font-family:'Oswald';font-weight:700;letter-spacing:2px;font-size:13px;cursor:pointer;transition:border-color .2s,color .2s}
+.secondary-btn:hover{border-color:var(--steel);color:var(--steel)}
+.auth-toggle{text-align:center;margin-top:14px;font-size:13px;color:var(--text-dim)}
+.auth-toggle span{color:var(--steel);cursor:pointer;font-weight:600}
+.auth-toggle span:hover{color:var(--amber)}
+.disclaimer{margin-top:18px;font-size:11px;color:#5c667a;line-height:1.5;border-top:1px solid var(--panel-line);padding-top:12px}
+#nickname-modal{position:fixed;inset:0;z-index:55;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px)}
+#main-menu{position:fixed;inset:0;z-index:40;display:none;flex-direction:column}
+#menu-canvas-wrap{position:absolute;inset:0;z-index:0}
+#menu-canvas-wrap::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,13,18,0.2)0%,rgba(11,13,18,0.55)55%,rgba(11,13,18,0.95)100%)}
+.menu-ui{position:relative;z-index:2;display:flex;flex-direction:column;height:100%;overflow:hidden}
+.menu-header{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;flex-shrink:0}
+.menu-logo{font-family:'Oswald';font-weight:700;font-size:20px;letter-spacing:3px}
+.menu-logo span{color:var(--blood)}
+.menu-header-right{display:flex;gap:8px;align-items:center}
+.menu-header-btn{background:rgba(11,13,18,0.6);border:1px solid var(--panel-line);color:var(--text-dim);font-family:'Oswald';font-size:11px;letter-spacing:1px;padding:8px 12px;transition:color .2s,border-color .2s}
+.menu-header-btn:hover{color:var(--blood);border-color:var(--blood)}
+.menu-header-btn.gold:hover{color:var(--amber);border-color:var(--amber)}
+.menu-charinfo{padding:0 18px;flex-shrink:0}
+.char-name{font-family:'Oswald';font-size:26px;letter-spacing:1px;color:#fff}
+.char-role{font-size:13px;letter-spacing:2px;color:var(--amber);text-transform:uppercase;margin-bottom:4px}
+.char-desc{font-size:13px;color:var(--text-dim);max-width:340px;line-height:1.4}
+.char-skill{margin-top:8px;font-size:12px;color:var(--steel)}
+.char-skill b{color:#fff}
+.char-skill .locked{color:var(--blood);opacity:0.6}
+.menu-tabs{display:flex;gap:6px;padding:10px 18px 6px;overflow-x:auto;flex-shrink:0}
+.tab-btn{flex:none;padding:8px 14px;background:rgba(21,25,35,0.7);border:1px solid var(--panel-line);color:var(--text-dim);font-family:'Oswald';font-size:11px;letter-spacing:1px;transition:all .2s}
+.tab-btn.active{color:#fff;border-color:var(--amber);background:rgba(232,185,61,0.12)}
+.menu-panel{flex:1;overflow-y:auto;padding:6px 18px 12px}
+.menu-panel::-webkit-scrollbar{width:4px}
+.menu-panel::-webkit-scrollbar-thumb{background:var(--panel-line);border-radius:2px}
+.h-scroll{display:flex;gap:10px;overflow-x:auto;padding-bottom:6px}
+.card{flex:none;width:118px;background:rgba(21,25,35,0.85);border:1px solid var(--panel-line);padding:10px;text-align:center;transition:border-color .15s,box-shadow .15s;cursor:pointer}
+.card.selected{border-color:var(--amber);box-shadow:0 0 12px rgba(232,185,61,0.3)}
+.card.locked{opacity:0.5;cursor:not-allowed;filter:grayscale(0.5)}
+.card .lock-icon{color:var(--blood);font-size:16px;margin-bottom:4px}
+.card-swatch{width:100%;height:52px;border-radius:3px;margin-bottom:8px;background-size:cover;background-position:center}
+.card-name{font-size:12px;font-weight:700;line-height:1.2}
+.card-sub{font-size:10px;color:var(--text-dim);margin-top:2px}
+.card-price{font-size:10px;color:var(--amber);margin-top:4px}
+.skin-row{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.skin-dot{width:26px;height:26px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color .2s}
+.skin-dot.selected{border-color:#fff}
+.weapon-row{display:flex;justify-content:space-between;align-items:center;background:rgba(21,25,35,0.85);border:1px solid var(--panel-line);padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:all .2s}
+.weapon-row.selected{border-color:var(--steel);background:rgba(74,127,166,0.12)}
+.weapon-name{font-weight:700;font-size:14px}
+.weapon-desc{font-size:11px;color:var(--text-dim)}
+.weapon-stats{font-size:10px;color:var(--amber);text-align:right}
+.mode-row{display:flex;gap:10px;margin-bottom:10px}
+.mode-card{flex:1;background:rgba(21,25,35,0.85);border:1px solid var(--panel-line);padding:14px;cursor:pointer;text-align:center;transition:all .2s}
+.mode-card.selected{border-color:var(--blood);background:rgba(194,59,59,0.12)}
+.mode-title{font-family:'Oswald';font-size:15px;letter-spacing:1px}
+.mode-desc{font-size:11px;color:var(--text-dim);margin-top:4px}
+.diff-row{display:flex;gap:8px}
+.diff-card{flex:1;text-align:center;padding:10px;background:rgba(21,25,35,0.85);border:1px solid var(--panel-line);cursor:pointer;font-size:12px;transition:all .2s}
+.diff-card.selected{border-color:var(--amber);color:var(--amber)}
+.menu-footer{padding:10px 18px 18px;display:flex;gap:10px;align-items:center;flex-shrink:0}
+#play-btn{flex:1}
+#music-toggle{width:48px;height:48px;flex:none;background:rgba(21,25,35,0.85);border:1px solid var(--panel-line);color:var(--text);font-size:18px}
+#mail-panel{position:fixed;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px)}
+#mail-panel .auth-card{max-width:500px;max-height:80vh;overflow-y:auto;width:90vw}
+.mail-item{padding:12px 14px;border-bottom:1px solid var(--panel-line);cursor:pointer;transition:background .2s}
+.mail-item:hover{background:rgba(74,127,166,0.1)}
+.mail-item .mail-title{font-weight:700;font-size:14px}
+.mail-item .mail-date{font-size:11px;color:var(--text-dim)}
+.mail-item .mail-body{font-size:13px;color:var(--text-dim);margin-top:4px;display:none}
+.mail-item.open .mail-body{display:block}
+.mail-badge{background:var(--blood);color:#fff;font-size:10px;border-radius:50%;padding:2px 8px;margin-left:6px}
+#settings-panel{position:fixed;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px)}
+#settings-panel .auth-card{max-width:450px;max-height:80vh;overflow-y:auto;width:90vw}
+.setting-row{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--panel-line)}
+.setting-row label{font-size:14px;font-weight:600}
+.setting-row .desc{font-size:11px;color:var(--text-dim)}
+.toggle-switch{width:44px;height:24px;background:#2a3242;border-radius:12px;position:relative;cursor:pointer;transition:background .2s}
+.toggle-switch.active{background:var(--steel)}
+.toggle-switch::after{content:"";width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:3px;left:3px;transition:transform .2s}
+.toggle-switch.active::after{transform:translateX(20px)}
+.settings-close{margin-top:16px}
+#event-panel{position:fixed;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px)}
+#event-panel .auth-card{max-width:450px;max-height:80vh;overflow-y:auto;width:90vw;text-align:center}
+.spin-wheel{width:200px;height:200px;border-radius:50%;border:4px solid var(--amber);margin:16px auto;position:relative;background:conic-gradient(var(--blood)0deg 60deg,var(--steel)60deg 120deg,var(--amber)120deg 180deg,var(--green)180deg 240deg,#9b59b6 240deg 300deg,#e67e22 300deg 360deg);transition:transform 4s cubic-bezier(0.17,0.67,0.12,0.99)}
+.spin-wheel::after{content:"▼";position:absolute;top:-20px;left:50%;transform:translateX(-50%);color:var(--amber);font-size:24px}
+.spin-result{font-size:18px;font-weight:700;margin-top:12px;color:var(--amber)}
+#shop-panel{position:fixed;inset:0;z-index:45;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.85);backdrop-filter:blur(4px)}
+#shop-panel .auth-card{max-width:500px;max-height:80vh;overflow-y:auto;width:90vw}
+.shop-item{display:flex;justify-content:space-between;align-items:center;padding:12px 14px;border-bottom:1px solid var(--panel-line)}
+.shop-item .item-info{text-align:left}
+.shop-item .item-name{font-weight:700;font-size:14px}
+.shop-item .item-desc{font-size:11px;color:var(--text-dim)}
+.shop-item .item-price{font-size:13px;color:var(--amber);font-weight:700}
+.shop-item .buy-btn{padding:6px 16px;background:var(--steel);border:none;color:#fff;font-weight:700;font-size:12px;border-radius:3px;transition:background .2s}
+.shop-item .buy-btn:hover{background:#3a6a8a}
+.shop-item .buy-btn:disabled{opacity:0.5;cursor:not-allowed}
+#hud{position:fixed;inset:0;z-index:20;pointer-events:none;display:none}
+.hud-top{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.stat-panel{background:rgba(11,13,18,0.8);border:1px solid var(--panel-line);clip-path:polygon(0 8px,8px 0,100% 0,100% 100%,8px 100%,0 calc(100% - 8px));padding:8px 14px;min-width:160px;backdrop-filter:blur(4px);flex:1}
+.player-name{font-family:'Oswald';font-size:12px;letter-spacing:1px;display:flex;justify-content:space-between}
+.player-name b{color:var(--amber)}
+.bar-track{width:100%;height:8px;background:#1a1f2b;margin-top:4px;border-radius:1px;overflow:hidden;border:1px solid #0b0d12}
+.bar-fill{height:100%;transition:width .25s ease}
+.hp-fill{background:linear-gradient(90deg,#8a2020,var(--blood))}
+.xp-fill{background:linear-gradient(90deg,#8a6a1a,var(--amber))}
+.bar-label{font-size:9px;color:var(--text-dim);margin-top:2px;letter-spacing:1px}
+.hud-right{display:flex;gap:6px;align-items:flex-start;flex-shrink:0}
+.hud-btn{pointer-events:auto;background:rgba(11,13,18,0.8);border:1px solid var(--panel-line);color:var(--text-dim);font-family:'Oswald';font-size:10px;letter-spacing:1px;padding:6px 10px;transition:color .2s,border-color .2s}
+.hud-btn:hover{color:var(--blood);border-color:var(--blood)}
+.hud-center-msg{position:absolute;top:44%;left:50%;transform:translate(-50%,-50%);font-family:'Oswald';font-size:15px;letter-spacing:3px;color:var(--amber);text-align:center;text-shadow:0 2px 8px rgba(0,0,0,0.8);opacity:0;transition:opacity .3s;pointer-events:none}
+.wave-info{position:absolute;top:10px;left:50%;transform:translateX(-50%);text-align:center;pointer-events:none}
+.wave-info .w-label{font-family:'Oswald';font-size:10px;letter-spacing:3px;color:var(--text-dim)}
+.wave-info .w-num{font-family:'Oswald';font-size:24px;color:#fff;letter-spacing:2px}
+.enemy-hp-bar{position:absolute;top:-20px;left:50%;transform:translateX(-50%);width:40px;height:4px;background:#1a1f2b;border-radius:2px;overflow:hidden}
+.enemy-hp-fill{height:100%;background:var(--blood);transition:width .2s}
+#controls{position:absolute;bottom:0;left:0;right:0;display:none;justify-content:space-between;align-items:flex-end;padding:16px;pointer-events:none;z-index:21}
+#joy-zone{width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.05);border:1px solid var(--panel-line);position:relative;pointer-events:auto}
+#joy-stick{width:44px;height:44px;border-radius:50%;background:rgba(74,127,166,0.5);border:1px solid var(--steel);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%)}
+.action-btns{display:flex;flex-direction:column;gap:10px;align-items:center}
+#attack-btn,#skill-btn{border-radius:50%;pointer-events:auto;cursor:pointer;color:#fff;font-family:'Oswald';letter-spacing:1px;border:none;font-size:11px}
+#attack-btn{width:68px;height:68px;background:rgba(194,59,59,0.4);border:2px solid var(--blood);font-size:11px}
+#attack-btn:active{background:rgba(194,59,59,0.7)}
+#skill-btn{width:52px;height:52px;background:rgba(74,127,166,0.4);border:2px solid var(--steel);font-size:9px;position:relative}
+#skill-btn:active{background:rgba(74,127,166,0.7)}
+#skill-cd{position:absolute;inset:0;border-radius:50%;background:conic-gradient(rgba(0,0,0,0.7)0deg,transparent 0deg);pointer-events:none}
+#gameover-screen{position:fixed;inset:0;z-index:60;display:none;align-items:center;justify-content:center;flex-direction:column;background:rgba(11,13,18,0.95);text-align:center;padding:20px}
+#gameover-screen h1{font-family:'Oswald';font-size:40px;letter-spacing:4px;color:var(--blood);margin-bottom:8px}
+#gameover-screen p{color:var(--text-dim);margin-bottom:24px;font-size:15px}
+.go-btns{display:flex;gap:10px;width:min(320px,90vw)}
+.go-btns .primary-btn{width:auto;flex:1}
+::-webkit-scrollbar{height:6px;width:6px}
+::-webkit-scrollbar-thumb{background:var(--panel-line);border-radius:3px}
+::-webkit-scrollbar-track{background:transparent}
+@media(max-width:768px){.auth-card{padding:24px 18px}.menu-charinfo .char-name{font-size:20px}.menu-logo{font-size:16px}.stat-panel{padding:6px 10px;min-width:120px}.hud-top{top:6px;left:6px;right:6px}#controls{padding:12px}#joy-zone{width:80px;height:80px}#joy-stick{width:36px;height:36px}#attack-btn{width:58px;height:58px;font-size:10px}#skill-btn{width:44px;height:44px;font-size:8px}}
+@media(min-width:769px){#controls{display:none!important}}
+#discord-cmd-panel{position:fixed;inset:0;z-index:70;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.9);backdrop-filter:blur(8px)}
+#discord-cmd-panel .auth-card{max-width:500px;max-height:80vh;overflow-y:auto;width:90vw}
+.discord-cmd-log{background:#0e1219;border:1px solid var(--panel-line);padding:12px;max-height:300px;overflow-y:auto;font-size:12px;color:var(--text-dim);font-family:monospace;white-space:pre-wrap;margin-bottom:12px}
+.discord-cmd-log .cmd-success{color:var(--green)}
+.discord-cmd-log .cmd-error{color:var(--blood)}
+.discord-cmd-log .cmd-info{color:var(--amber)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div id="loading-screen">
+<div class="logo">THE <span>WARRIOR</span></div>
+<div class="load-sub">SURVIVAL · RPG · BATTLE</div>
+<div class="load-track"><div class="load-fill" id="load-fill"></div></div>
+<div class="load-tip" id="load-tip">Loading battlefield...</div>
+</div>
+
+<div id="auth-screen">
+<div class="auth-card" id="auth-card">
+<div class="auth-eyebrow" id="auth-eyebrow">Welcome</div>
+<div class="auth-title" id="auth-title">THE WARRIOR</div>
+<div class="auth-sub" id="auth-sub">Masuk atau daftar untuk bertahan di medan tempur.</div>
+<div id="auth-fields">
+<input class="field" id="auth-username" type="text" placeholder="Username" maxlength="20">
+<input class="field" id="auth-password" type="password" placeholder="Password" maxlength="30">
+</div>
+<button class="primary-btn" id="auth-action-btn" onclick="handleAuth()">MASUK</button>
+<div class="auth-toggle"><span id="auth-toggle-text">Belum punya akun?</span> <span id="auth-toggle-link" onclick="toggleAuthMode()">DAFTAR</span></div>
+<div class="divider">ATAU</div>
+<button class="auth-btn" onclick="guestLogin()"><span style="font-size:20px;">👤</span> Masuk sebagai Tamu</button>
+<button class="auth-btn" onclick="openDiscordCmd()" style="background:#5865F2;border-color:#5865F2;color:#fff;">🤖 Discord Command Panel</button>
+<div class="disclaimer">Login & daftar menggunakan username dan password. Untuk keamanan, kaitkan akun dengan Google/Facebook di pengaturan.</div>
+</div>
+</div>
+
+<div id="nickname-modal">
+<div class="auth-card"><div class="auth-eyebrow">Panggilan Perang</div><div class="auth-title">NICKNAME</div><div class="auth-sub">Masukkan nickname untuk karakter Anda.</div>
+<input class="field" id="nickname-input" type="text" placeholder="Nickname" maxlength="16">
+<button class="primary-btn" onclick="confirmNickname()">LANJUTKAN</button></div>
+</div>
+
+<div id="main-menu">
+<div id="menu-canvas-wrap"><canvas id="menu-canvas"></canvas></div>
+<div class="menu-ui">
+<div class="menu-header">
+<div class="menu-logo">THE <span>WARRIOR</span></div>
+<div class="menu-header-right">
+<span style="font-size:12px;color:var(--amber);" id="menu-coin">🪙 0</span>
+<button class="menu-header-btn" onclick="openMail()">📬 <span id="mail-badge" class="mail-badge hidden">0</span></button>
+<button class="menu-header-btn gold" onclick="openSettings()">⚙️</button>
+<button class="menu-header-btn" onclick="openDiscordCmd()">🤖</button>
+<button class="menu-header-btn" onclick="signOut()">SIGN OUT</button>
+</div>
+</div>
+<div class="menu-charinfo">
+<div class="char-role" id="mi-role">ASSAULT</div>
+<div class="char-name" id="mi-name">Warrior</div>
+<div class="char-desc" id="mi-desc">Prajurit garis depan.</div>
+<div class="char-skill" id="mi-skills"><b>Skill 1:</b> <span id="mi-skill1">Bash</span><span class="locked" id="mi-skill1-lock"> (Lv.1)</span><br><b>Skill 2:</b> <span id="mi-skill2">—</span><span class="locked" id="mi-skill2-lock"> (Lv.15)</span><br><b>Skill 3:</b> <span id="mi-skill3">—</span><span class="locked" id="mi-skill3-lock"> (Lv.30)</span></div>
+</div>
+<div class="menu-tabs">
+<div class="tab-btn active" data-tab="char" onclick="switchTab('char')">KARAKTER</div>
+<div class="tab-btn" data-tab="weapon" onclick="switchTab('weapon')">SENJATA</div>
+<div class="tab-btn" data-tab="mode" onclick="switchTab('mode')">MODE</div>
+<div class="tab-btn" data-tab="shop" onclick="switchTab('shop')">TOKO</div>
+<div class="tab-btn" data-tab="event" onclick="switchTab('event')">EVENT</div>
+</div>
+<div class="menu-panel">
+<div id="tab-char"><div class="h-scroll" id="char-list"></div><div class="skin-row" id="skin-list"></div></div>
+<div id="tab-weapon" class="hidden"><div id="weapon-list"></div><div style="margin-top:12px;"><div style="font-size:11px;letter-spacing:2px;color:var(--text-dim);">BUAT SENJATA RAKITAN</div><div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;"><button class="secondary-btn" style="flex:1;" onclick="craftWeapon()">🔧 Rakit Senjata</button></div><div id="craft-result" style="font-size:12px;color:var(--amber);margin-top:6px;"></div></div></div>
+<div id="tab-mode" class="hidden"><div class="mode-row" id="mode-list"></div><div style="font-size:11px;letter-spacing:2px;color:var(--text-dim);margin:12px 0 6px;">TINGKAT KESULITAN</div><div class="diff-row" id="diff-list"></div><div style="margin-top:12px;"><div style="font-size:11px;letter-spacing:2px;color:var(--text-dim);">MISI HARIAN</div><div id="daily-mission" style="background:rgba(21,25,35,0.85);border:1px solid var(--panel-line);padding:12px;margin-top:6px;font-size:13px;"></div></div></div>
+<div id="tab-shop" class="hidden"><div id="shop-items"></div></div>
+<div id="tab-event" class="hidden"><div style="text-align:center;padding:8px 0;"><div style="font-size:14px;font-weight:700;color:var(--amber);">🎡 SPIN SENJATA</div><div class="spin-wheel" id="spin-wheel"></div><button class="primary-btn" style="max-width:200px;margin:8px auto;" onclick="spinWheel()">PUTAR (1x 🪙50)</button><div class="spin-result" id="spin-result"></div><div style="margin-top:16px;border-top:1px solid var(--panel-line);padding-top:12px;"><div style="font-size:12px;color:var(--text-dim);">Event Aktif</div><div id="event-list" style="font-size:13px;color:var(--amber);"></div></div></div></div>
+</div>
+<div class="menu-footer"><button id="music-toggle" onclick="toggleMusic()">♪</button><button class="primary-btn" id="play-btn" onclick="launchGame()">MULAI BERTEMPUR</button></div>
+</div>
+</div>
+<!-- MAIL PANEL -->
+<div id="mail-panel">
+<div class="auth-card"><div class="auth-eyebrow">📬 PESAN</div><div class="auth-title">KOTAK MASUK</div><div id="mail-list"></div><button class="secondary-btn settings-close" onclick="closeMail()">Tutup</button></div>
+</div>
+
+<!-- SETTINGS PANEL -->
+<div id="settings-panel">
+<div class="auth-card"><div class="auth-eyebrow">⚙️ PENGATURAN</div><div class="auth-title">SETTINGS</div><div id="settings-content"></div><button class="secondary-btn settings-close" onclick="closeSettings()">Tutup</button></div>
+</div>
+
+<!-- DISCORD COMMAND PANEL -->
+<div id="discord-cmd-panel">
+<div class="auth-card">
+<div class="auth-eyebrow">🤖 DISCORD COMMAND</div>
+<div class="auth-title">COMMAND CENTER</div>
+<div style="font-size:12px;color:var(--text-dim);margin-bottom:10px;">Gunakan command dengan prefix <b>/</b> atau <b>!</b> contoh: <b>/givecoin joy123 100</b></div>
+<div class="discord-cmd-log" id="discord-cmd-log">> Menunggu command...</div>
+<div style="display:flex;gap:8px;">
+<input class="field" id="discord-cmd-input" type="text" placeholder="Masukkan command..." style="margin:0;flex:1;" onkeydown="if(event.key==='Enter')executeDiscordCmd()">
+<button class="primary-btn" style="width:auto;padding:12px 20px;margin:0;" onclick="executeDiscordCmd()">Kirim</button>
+</div>
+<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/givecoin')">givecoin</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/givekarakter')">givekarakter</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/givegun')">givegun</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/resetcoin')">resetcoin</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/resetgun')">resetgun</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/resetequipment')">resetequipment</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/banned')">banned</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/kick')">kick</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/unbanned')">unbanned</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/spec')">spec</button>
+<button class="secondary-btn" style="padding:4px 10px;font-size:10px;" onclick="fillCmd('/announcement')">announcement</button>
+</div>
+<button class="secondary-btn settings-close" onclick="closeDiscordCmd()">Tutup</button>
+</div>
+</div>
+
+<!-- GAME CANVAS -->
+<canvas id="game-canvas"></canvas>
+
+<!-- HUD -->
+<div id="hud">
+<div class="hud-top">
+<div class="stat-panel">
+<div class="player-name"><span id="hud-username">WARRIOR</span> <b id="hud-level">LV 1</b></div>
+<div class="bar-track"><div class="bar-fill hp-fill" id="hp-bar" style="width:100%"></div></div>
+<div class="bar-label">HP <span id="hp-text">100/100</span></div>
+<div class="bar-track"><div class="bar-fill xp-fill" id="xp-bar" style="width:0%"></div></div>
+<div class="bar-label">XP <span id="xp-text">0/50</span></div>
+<div class="bar-label">🪙 <span id="hud-coins">0</span></div>
+</div>
+<div class="hud-right"><button class="hud-btn" onclick="togglePause()">⏸</button><button class="hud-btn" onclick="signOut()">✕</button></div>
+</div>
+<div class="wave-info"><div class="w-label">WAVE</div><div class="w-num" id="wave-num">1</div></div>
+<div class="hud-center-msg" id="center-msg"></div>
+</div>
+
+<div id="controls">
+<div id="joy-zone"><div id="joy-stick"></div></div>
+<div class="action-btns">
+<button id="skill-btn" ontouchstart="useSkill()" onmousedown="useSkill()">SKILL<div id="skill-cd"></div></button>
+<button id="attack-btn" ontouchstart="attack()" onmousedown="attack()">⚔️</button>
+</div>
+</div>
+
+<div id="gameover-screen">
+<h1>GUGUR</h1>
+<p id="gameover-stats">Kamu bertahan hingga wave 1</p>
+<div class="go-btns"><button class="secondary-btn" onclick="backToMenu()">MENU UTAMA</button><button class="primary-btn" onclick="restartGame()">COBA LAGI</button></div>
+</div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+/* ============================================================
+   THE WARRIOR SURVIVAL — FULL GAME
+   Author: JoyWardana | YouTube: @JoyWardanaa
+   ============================================================ */
+
+// ======================= DATA =======================
+const CHARACTERS = [
+{id:'raka',name:'Raka "Iron Wolf"',role:'Assault',desc:'Penyerang garis depan dengan serangan beruntun.',
+skills:[{name:'Suppressing Fire',desc:'Kecepatan serang meningkat 5 detik.',unlockLv:1},{name:'Berserker Rage',desc:'Damage +50% selama 6 detik.',unlockLv:15},{name:'War Cry',desc:'Memperlambat semua musuh di sekitar.',unlockLv:30}],
+hpMod:1.0,dmgMod:1.05,spdMod:1.0,base:0x4a7fa6,accent:0xe8b93d,
+skins:[{name:'Baja',color:0x4a7fa6},{name:'Malam',color:0x2c3e50},{name:'Emas',color:0xc9a84c}],price:0,unlockLv:1,image:'https://i.imgur.com/HHEQnCS.jpeg'},
+{id:'sari',name:'Sari "Ghost Blade"',role:'Scout',desc:'Lincah, menerjang dari titik buta musuh.',
+skills:[{name:'Dash Strike',desc:'Menerjang musuh terdekat, damage besar.',unlockLv:1},{name:'Shadow Step',desc:'Teleportasi dan serangan balik.',unlockLv:15},{name:'Assassinate',desc:'Serangan mematikan dari belakang.',unlockLv:30}],
+hpMod:0.85,dmgMod:1.0,spdMod:1.35,base:0x8e44ad,accent:0xe6e6e6,
+skins:[{name:'Violet',color:0x8e44ad},{name:'Crimson',color:0xc23b3b},{name:'Phantom',color:0x2c3e50}],price:200,unlockLv:5,image:'https://i.imgur.com/FdYKXXJ.jpeg'},
+{id:'bara',name:'Bara "Juggernaut"',role:'Tank',desc:'Tembok baja penahan gempuran musuh.',
+skills:[{name:'Fortify',desc:'Perisai sementara + pulihkan HP.',unlockLv:1},{name:'Iron Wall',desc:'Menahan damage besar untuk tim.',unlockLv:15},{name:'Last Stand',desc:'HP tidak bisa turun di bawah 1 selama 5 detik.',unlockLv:30}],
+hpMod:1.6,dmgMod:0.8,spdMod:0.8,base:0x556b2f,accent:0x8a8a8a,
+skins:[{name:'Lumut',color:0x556b2f},{name:'Arctic',color:0x7f9aa6},{name:'Obsidian',color:0x1a1a1a}],price:350,unlockLv:10,image:'https://i.imgur.com/8HpIvN4.jpeg'},
+{id:'nadia',name:'Nadia "Valkyrie"',role:'Ranger',desc:'Penembak jitu presisi jarak jauh.',
+skills:[{name:'Focus Shot',desc:'Ledakan damage besar ke semua musuh dekat.',unlockLv:1},{name:'Piercing Arrow',desc:'Menembus banyak musuh.',unlockLv:15},{name:'Hawkeye',desc:'Damage +100% selama 4 detik.',unlockLv:30}],
+hpMod:0.9,dmgMod:1.35,spdMod:1.0,base:0xe8b93d,accent:0xc23b3b,
+skins:[{name:'Fajar',color:0xe8b93d},{name:'Shadow',color:0x34495e},{name:'Solar',color:0xf39c12}],price:500,unlockLv:15,image:'https://i.imgur.com/iXaHH4G.jpeg'},
+{id:'kaito',name:'Kaito "Ronin"',role:'Samurai',desc:'Pendekar pedang dengan kecepatan dan ketepatan.',
+skills:[{name:'Iai Slash',desc:'Serangan cepat dengan damage tinggi.',unlockLv:1},{name:'Kaiten',desc:'Serangan berputar mengenai semua musuh.',unlockLv:15},{name:'Zanshin',desc:'Auto-counter serangan musuh.',unlockLv:30}],
+hpMod:1.1,dmgMod:1.2,spdMod:1.2,base:0xc23b3b,accent:0xe8b93d,
+skins:[{name:'Crimson',color:0xc23b3b},{name:'Shadow',color:0x2c3e50},{name:'Golden',color:0xf1c40f}],price:750,unlockLv:20,image:'https://i.imgur.com/X2caFsM.jpeg'}
+];
+
+const WEAPONS = [
+{id:'rifle',name:'Senapan Serbu',range:2.8,dmg:1.0,cooldown:0.35,desc:'Seimbang, cocok segala situasi.',price:0},
+{id:'knife',name:'Pisau Tempur',range:1.6,dmg:0.68,cooldown:0.18,desc:'Cepat, mematikan jarak dekat.',price:80},
+{id:'sniper',name:'Senapan Runduk',range:4.6,dmg:2.3,cooldown:0.9,desc:'Damage besar, serangan lambat.',price:150},
+{id:'shotgun',name:'Shotgun',range:2.2,dmg:1.8,cooldown:0.6,desc:'Damage tinggi jarak dekat.',price:200},
+{id:'bow',name:'Busur Silang',range:3.5,dmg:1.5,cooldown:0.5,desc:'Senjata senyap dengan damage baik.',price:120}
+];
+
+const MODES = [{id:'classic',name:'CLASSIC',desc:'Wave bertahap normal.'},{id:'ranked',name:'RANKED',desc:'Musuh lebih kuat, skor dicatat.'},{id:'endless',name:'ENDLESS',desc:'Tanpa batas, semakin sulit.'}];
+const DIFFS = [{id:'mudah',name:'Mudah',hpMul:0.7,spdMul:0.8,countMul:0.7},{id:'normal',name:'Normal',hpMul:1.0,spdMul:1.0,countMul:1.0},{id:'sulit',name:'Sulit',hpMul:1.6,spdMul:1.3,countMul:1.4},{id:'nightmare',name:'Nightmare',hpMul:2.5,spdMul:1.6,countMul:1.8}];
+const SHOP_ITEMS = [
+{id:'potion',name:'Potion HP',desc:'Pulihkan 50 HP dalam pertempuran.',price:30,type:'consumable'},
+{id:'big_potion',name:'Potion HP Besar',desc:'Pulihkan 150 HP.',price:80,type:'consumable'},
+{id:'shield_potion',name:'Potion Perisai',desc:'Damage shield 30% selama 8 detik.',price:60,type:'consumable'},
+{id:'xp_boost',name:'Boost XP',desc:'XP gain +25% untuk 3 pertempuran.',price:100,type:'consumable'},
+{id:'coin_boost',name:'Boost Coin',desc:'Coin +20% untuk 3 pertempuran.',price:120,type:'consumable'},
+{id:'weapon_blueprint',name:'Blueprint Senjata',desc:'Rakit senjata kustom.',price:200,type:'craft'}
+];
+const MAIL_DATA = [
+{id:1,title:'Selamat Datang di The Warrior Survival!',date:'2026-07-22',body:'Terima kasih telah bergabung! Siapkan diri untuk bertahan di medan tempur.'},
+{id:2,title:'Update: Sistem Senjata Rakitan',date:'2026-07-21',body:'Kamu sekarang bisa merakit senjata kustom dari barang yang dikumpulkan.'},
+{id:3,title:'Event: Double Coin Weekend!',date:'2026-07-20',body:'Akhir pekan ini semua coin yang didapat digandakan!'}
+];
+
+const EQUIPMENT_LIST = [
+{id:'helm_baja',name:'Helm Baja',desc:'+20 HP max',price:100},
+{id:'armor_ringan',name:'Armor Ringan',desc:'+10% kecepatan',price:150},
+{id:'armor_berat',name:'Armor Berat',desc:'+40 HP max, -5% kecepatan',price:250},
+{id:'sepatu_cepat',name:'Sepatu Cepat',desc:'+15% kecepatan',price:200},
+{id:'sarung_tangan',name:'Sarung Tangan',desc:'+15% damage',price:180}
+];
+
+// ======================= STATE =======================
+let selection={charIdx:0,skinIdx:0,weaponIdx:0,modeIdx:0,diffIdx:1};
+let currentUser=null, isGuest=false;
+let userData={
+username:'',password:'',nickname:'Warrior',level:1,xp:0,xpNeed:50,coins:50,
+ownedCharacters:[0],ownedWeapons:[0],selectedChar:0,selectedSkin:0,selectedWeapon:0,
+inventory:{potion:0,big_potion:0,shield_potion:0,xp_boost:0,coin_boost:0,weapon_blueprint:0},
+completedMissions:[],totalWaves:0,totalKills:0,highestWave:0,
+linkedGoogle:false,linkedFacebook:false,mailRead:[],
+settings:{music:true,sfx:true,vibration:true,graphics:'high',controls:'default'},
+equipment:{helm_baja:false,armor_ringan:false,armor_berat:false,sepatu_cepat:false,sarung_tangan:false},
+banned:false,
+announcements:[]
+};
+let allUsers=JSON.parse(localStorage.getItem('warrior_users'))||{};
+let currentSession=JSON.parse(localStorage.getItem('warrior_session'))||null;
+let isAuthModeSignUp=false;
+
+// ======================= DISCORD COMMAND SYSTEM =======================
+const DISCORD_COMMANDS = {
+givecoin: {desc:'/givecoin [username] [jumlah]',fn:(args)=>{if(args.length<2)return'Format: /givecoin username jumlah';const u=args[0],amt=parseInt(args[1]);if(!allUsers[u])return'User tidak ditemukan';allUsers[u].coins=(allUsers[u].coins||0)+amt;localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ ${amt} coin diberikan ke ${u}`;}},
+givekarakter:{desc:'/givekarakter [username] [karakter_id]',fn:(args)=>{if(args.length<2)return'Format: /givekarakter username karakter_id (0-4)';const u=args[0],id=parseInt(args[1]);if(!allUsers[u])return'User tidak ditemukan';if(id<0||id>=CHARACTERS.length)return'Karakter ID tidak valid';if(!allUsers[u].ownedCharacters)allUsers[u].ownedCharacters=[];if(!allUsers[u].ownedCharacters.includes(id))allUsers[u].ownedCharacters.push(id);localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ Karakter ${CHARACTERS[id].name} diberikan ke ${u}`;}},
+givegun:{desc:'/givegun [username] [senjata_id]',fn:(args)=>{if(args.length<2)return'Format: /givegun username senjata_id (0-4)';const u=args[0],id=parseInt(args[1]);if(!allUsers[u])return'User tidak ditemukan';if(id<0||id>=WEAPONS.length)return'Senjata ID tidak valid';if(!allUsers[u].ownedWeapons)allUsers[u].ownedWeapons=[];if(!allUsers[u].ownedWeapons.includes(id))allUsers[u].ownedWeapons.push(id);localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ Senjata ${WEAPONS[id].name} diberikan ke ${u}`;}},
+giveequipment:{desc:'/giveequipment [username] [equip_id]',fn:(args)=>{if(args.length<2)return'Format: /giveequipment username equip_id';const u=args[0],id=args[1];if(!allUsers[u])return'User tidak ditemukan';if(!allUsers[u].equipment)allUsers[u].equipment={};if(!EQUIPMENT_LIST.find(e=>e.id===id))return'Equipment ID tidak valid';allUsers[u].equipment[id]=true;localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ Equipment ${id} diberikan ke ${u}`;}},
+resetcoin:{desc:'/resetcoin [username]',fn:(args)=>{if(args.length<1)return'Format: /resetcoin username';const u=args[0];if(!allUsers[u])return'User tidak ditemukan';allUsers[u].coins=0;localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ Coin ${u} direset ke 0`;}},
+resetgun:{desc:'/resetgun [username]',fn:(args)=>{if(args.length<1)return'Format: /resetgun username';const u=args[0];if(!allUsers[u])return'User tidak ditemukan';allUsers[u].ownedWeapons=[0];localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ Senjata ${u} direset`;}},
+resetequipment:{desc:'/resetequipment [username]',fn:(args)=>{if(args.length<1)return'Format: /resetequipment username';const u=args[0];if(!allUsers[u])return'User tidak ditemukan';allUsers[u].equipment={};localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ Equipment ${u} direset`;}},
+banned:{desc:'/banned [username]',fn:(args)=>{if(args.length<1)return'Format: /banned username';const u=args[0];if(!allUsers[u])return'User tidak ditemukan';allUsers[u].banned=true;localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`🚫 ${u} telah dibanned`;}},
+unbanned:{desc:'/unbanned [username]',fn:(args)=>{if(args.length<1)return'Format: /unbanned username';const u=args[0];if(!allUsers[u])return'User tidak ditemukan';allUsers[u].banned=false;localStorage.setItem('warrior_users',JSON.stringify(allUsers));return`✅ ${u} telah diunbanned`;}},
+kick:{desc:'/kick [username]',fn:(args)=>{if(args.length<1)return'Format: /kick username';const u=args[0];if(!allUsers[u])return'User tidak ditemukan';if(currentUser&&currentUser.username===u)return'Tidak bisa kick diri sendiri';if(currentSession&&currentSession.username===u){currentSession=null;localStorage.removeItem('warrior_session');}return`👢 ${u} telah dikick`;}},
+spec:{desc:'/spec [username]',fn:(args)=>{if(args.length<1)return'Format: /spec username';const u=args[0];if(!allUsers[u])return'User tidak ditemukan';return`📊 ${u} - Level:${allUsers[u].level||1}, Coin:${allUsers[u].coins||0}, Wave Tertinggi:${allUsers[u].highestWave||0}`;}},
+announcement:{desc:'/announcement [pesan]',fn:(args)=>{if(args.length<1)return'Format: /announcement pesan';const msg=args.join(' ');// Broadcast ke semua user
+return`📢 ANNOUNCEMENT: ${msg}`;}}
+};
+
+function executeDiscordCmd(){
+const input=document.getElementById('discord-cmd-input');
+const cmd=input.value.trim();
+if(!cmd)return;
+const log=document.getElementById('discord-cmd-log');
+log.innerHTML+=`\n> ${cmd}`;
+const parts=cmd.split(' ');
+const prefix=parts[0][0];
+const cmdName=parts[0].substring(1).toLowerCase();
+const args=parts.slice(1);
+const command=DISCORD_COMMANDS[cmdName];
+if(!command){
+log.innerHTML+=`\n❌ Command tidak dikenal: ${cmdName}`;
+log.scrollTop=log.scrollHeight;
+input.value='';
+return;
+}
+const result=command.fn(args);
+const color=result.includes('✅')?'cmd-success':result.includes('🚫')?'cmd-error':'cmd-info';
+log.innerHTML+=`\n<span class="${color}">${result}</span>`;
+log.scrollTop=log.scrollHeight;
+input.value='';
+// Save data
+localStorage.setItem('warrior_users',JSON.stringify(allUsers));
+}
+
+function fillCmd(cmd){document.getElementById('discord-cmd-input').value=cmd+' ';document.getElementById('discord-cmd-input').focus();}
+function openDiscordCmd(){document.getElementById('discord-cmd-panel').style.display='flex';}
+function closeDiscordCmd(){document.getElementById('discord-cmd-panel').style.display='none';}
+
+// ======================= LOADING =======================
+window.addEventListener('load',()=>{
+let pct=0;const tips=['Menyiapkan medan tempur...','Mengasah senjata...','Memuat karakter 3D...','Mengatur formasi musuh...','Hampir siap...'];
+const fill=document.getElementById('load-fill'),tip=document.getElementById('load-tip');
+const iv=setInterval(()=>{pct+=4+Math.random()*8;if(pct>100)pct=100;fill.style.width=pct+'%';tip.textContent=tips[Math.min(tips.length-1,Math.floor(pct/22))];if(pct>=100){clearInterval(iv);setTimeout(()=>{document.getElementById('loading-screen').classList.add('hidden');checkSession();},300);}},140);
+});
+
+// ======================= AUTH =======================
+function checkSession(){if(currentSession&&allUsers[currentSession.username]){currentUser=allUsers[currentSession.username];userData=currentUser;if(allUsers[currentSession.username].banned){alert('Akun Anda telah dibanned!');document.getElementById('auth-screen').style.display='flex';return;}if(userData.nickname)enterMenu();else showNicknameModal();}else document.getElementById('auth-screen').style.display='flex';}
+function toggleAuthMode(){isAuthModeSignUp=!isAuthModeSignUp;const btn=document.getElementById('auth-action-btn'),title=document.getElementById('auth-title'),sub=document.getElementById('auth-sub'),tt=document.getElementById('auth-toggle-text'),tl=document.getElementById('auth-toggle-link');if(isAuthModeSignUp){btn.textContent='DAFTAR';title.textContent='DAFTAR AKUN';sub.textContent='Buat akun untuk menyimpan progresmu.';tt.textContent='Sudah punya akun?';tl.textContent='MASUK';}else{btn.textContent='MASUK';title.textContent='THE WARRIOR';sub.textContent='Masuk untuk bertahan di medan tempur.';tt.textContent='Belum punya akun?';tl.textContent='DAFTAR';}}
+function handleAuth(){const u=document.getElementById('auth-username').value.trim(),p=document.getElementById('auth-password').value.trim();if(!u||!p){alert('Isi username dan password!');return;}if(isAuthModeSignUp){if(allUsers[u]){alert('Username sudah terdaftar!');return;}allUsers[u]={username:u,password:p,nickname:'',level:1,xp:0,xpNeed:50,coins:50,ownedCharacters:[0],ownedWeapons:[0],selectedChar:0,selectedSkin:0,selectedWeapon:0,inventory:{potion:0,big_potion:0,shield_potion:0,xp_boost:0,coin_boost:0,weapon_blueprint:0},completedMissions:[],totalWaves:0,totalKills:0,highestWave:0,linkedGoogle:false,linkedFacebook:false,mailRead:[],settings:{music:true,sfx:true,vibration:true,graphics:'high',controls:'default'},equipment:{},banned:false,announcements:[]};localStorage.setItem('warrior_users',JSON.stringify(allUsers));currentUser=allUsers[u];userData=currentUser;currentSession={username:u};localStorage.setItem('warrior_session',JSON.stringify(currentSession));showNicknameModal();}else{if(!allUsers[u]||allUsers[u].password!==p){alert('Username atau password salah!');return;}if(allUsers[u].banned){alert('Akun Anda telah dibanned!');return;}currentUser=allUsers[u];userData=currentUser;currentSession={username:u};localStorage.setItem('warrior_session',JSON.stringify(currentSession));if(userData.nickname)enterMenu();else showNicknameModal();}}
+function guestLogin(){const gid='guest_'+Date.now();currentUser={username:gid,password:'',nickname:'',level:1,xp:0,xpNeed:50,coins:30,ownedCharacters:[0],ownedWeapons:[0],selectedChar:0,selectedSkin:0,selectedWeapon:0,inventory:{potion:0,big_potion:0,shield_potion:0,xp_boost:0,coin_boost:0,weapon_blueprint:0},completedMissions:[],totalWaves:0,totalKills:0,highestWave:0,linkedGoogle:false,linkedFacebook:false,mailRead:[],settings:{music:true,sfx:true,vibration:true,graphics:'high',controls:'default'},equipment:{},banned:false,announcements:[],isGuest:true};userData=currentUser;isGuest=true;showNicknameModal();}
+function showNicknameModal(){document.getElementById('auth-screen').style.display='none';document.getElementById('nickname-modal').style.display='flex';}
+function confirmNickname(){const nick=document.getElementById('nickname-input').value.trim()||'Warrior';userData.nickname=nick;if(!userData.isGuest){allUsers[userData.username].nickname=nick;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}document.getElementById('nickname-modal').style.display='none';enterMenu();}
+function signOut(){if(userData&&userData.isGuest){localStorage.removeItem('warrior_session');currentUser=null;userData=null;}else{currentSession=null;localStorage.removeItem('warrior_session');currentUser=null;userData=null;}gameActive=false;stopMusic();document.getElementById('hud').classList.add('hidden');document.getElementById('hud').style.display='none';document.getElementById('main-menu').style.display='none';document.getElementById('gameover-screen').style.display='none';document.getElementById('auth-screen').style.display='flex';resetGameState();if(menuRenderer){menuRenderer.dispose();menuRenderer=null;}}
+
+<script>
+// ======================= MAIN MENU =======================
+function enterMenu(){
+document.getElementById('auth-screen').style.display='none';
+document.getElementById('main-menu').style.display='flex';
+updateCoinDisplay();
+buildMenuLists();
+refreshCharInfo();
+initMenuScene();
+currentTheme='menu';
+startMusic('menu');
+updateMailBadge();
+generateDailyMission();
+}
+function updateCoinDisplay(){document.getElementById('menu-coin').textContent='🪙 '+(userData?userData.coins:0);}
+function buildMenuLists(){
+const cl=document.getElementById('char-list');cl.innerHTML='';
+CHARACTERS.forEach((c,i)=>{
+const owned=userData.ownedCharacters.includes(i);
+const unlocked=userData.level>=c.unlockLv;
+const canUse=owned&&unlocked;
+const div=document.createElement('div');
+div.className='card'+(i===selection.charIdx?' selected':'')+(!canUse?' locked':'');
+div.innerHTML=`<div class="card-swatch" style="background:url('${c.image}') center/cover, #${c.base.toString(16).padStart(6,'0')};"></div>
+<div class="card-name">${c.name.split(' "')[0]}</div><div class="card-sub">${c.role}</div>
+${!owned?`<div class="card-price">🪙 ${c.price} (Lv.${c.unlockLv})</div>`:''}
+${owned&&!unlocked?`<div class="card-price" style="color:var(--blood);">Butuh Lv.${c.unlockLv}</div>`:''}`;
+div.onclick=()=>{
+if(!canUse){if(!owned&&userData.coins>=c.price&&userData.level>=c.unlockLv){if(confirm(`Beli ${c.name} dengan 🪙${c.price}?`)){userData.coins-=c.price;userData.ownedCharacters.push(i);if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}buildMenuLists();updateCoinDisplay();}}else if(!owned){alert('Koin tidak cukup atau level belum mencukupi!');}return;}
+sfxClick();selection.charIdx=i;selection.skinIdx=0;userData.selectedChar=i;userData.selectedSkin=0;
+if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}
+buildMenuLists();refreshCharInfo();updateMenuCharacter();
+};cl.appendChild(div);});
+const sl=document.getElementById('skin-list');sl.innerHTML='';
+CHARACTERS[selection.charIdx].skins.forEach((s,i)=>{
+const dot=document.createElement('div');
+dot.className='skin-dot'+(i===selection.skinIdx?' selected':'');
+dot.style.background='#'+s.color.toString(16).padStart(6,'0');
+dot.title=s.name;
+dot.onclick=()=>{sfxClick();selection.skinIdx=i;userData.selectedSkin=i;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}buildMenuLists();updateMenuCharacter();};
+sl.appendChild(dot);});
+const wl=document.getElementById('weapon-list');wl.innerHTML='';
+WEAPONS.forEach((w,i)=>{
+const owned=userData.ownedWeapons.includes(i);
+const div=document.createElement('div');
+div.className='weapon-row'+(i===selection.weaponIdx?' selected':'');
+div.innerHTML=`<div><div class="weapon-name">${w.name}</div><div class="weapon-desc">${w.desc}</div></div>
+<div class="weapon-stats">DMG ${w.dmg.toFixed(1)}x<br>RANGE ${w.range}${!owned?`<br>🪙${w.price}`:''}</div>`;
+div.onclick=()=>{if(!owned){if(userData.coins>=w.price){if(confirm(`Beli ${w.name} dengan 🪙${w.price}?`)){userData.coins-=w.price;userData.ownedWeapons.push(i);if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}buildMenuLists();updateCoinDisplay();}}else{alert('Koin tidak cukup!');}return;}sfxClick();selection.weaponIdx=i;userData.selectedWeapon=i;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}buildMenuLists();};
+wl.appendChild(div);});
+const ml=document.getElementById('mode-list');ml.innerHTML='';
+MODES.forEach((m,i)=>{const div=document.createElement('div');div.className='mode-card'+(i===selection.modeIdx?' selected':'');div.innerHTML=`<div class="mode-title">${m.name}</div><div class="mode-desc">${m.desc}</div>`;div.onclick=()=>{sfxClick();selection.modeIdx=i;buildMenuLists();};ml.appendChild(div);});
+const dl=document.getElementById('diff-list');dl.innerHTML='';
+DIFFS.forEach((d,i)=>{const div=document.createElement('div');div.className='diff-card'+(i===selection.diffIdx?' selected':'');div.textContent=d.name;div.onclick=()=>{sfxClick();selection.diffIdx=i;buildMenuLists();};dl.appendChild(div);});
+const shopDiv=document.getElementById('shop-items');shopDiv.innerHTML='';
+SHOP_ITEMS.forEach(item=>{const div=document.createElement('div');div.className='shop-item';const invCount=userData.inventory[item.id]||0;
+div.innerHTML=`<div class="item-info"><div class="item-name">${item.name}</div><div class="item-desc">${item.desc} ${item.type==='consumable'?`(x${invCount})`:''}</div></div>
+<div><div class="item-price">🪙${item.price}</div><button class="buy-btn" ${userData.coins<item.price?'disabled':''} onclick="buyShopItem('${item.id}',${item.price})">Beli</button></div>`;
+shopDiv.appendChild(div);});
+updateEventList();
+}
+function buyShopItem(id,price){if(userData.coins<price){alert('Koin tidak cukup!');return;}userData.coins-=price;userData.inventory[id]=(userData.inventory[id]||0)+1;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}updateCoinDisplay();buildMenuLists();sfxClick();}
+function refreshCharInfo(){
+const c=CHARACTERS[selection.charIdx];
+const unlockedSkills=c.skills.filter(s=>userData.level>=s.unlockLv);
+document.getElementById('mi-role').textContent=c.role.toUpperCase();
+document.getElementById('mi-name').textContent=userData.nickname||c.name;
+document.getElementById('mi-desc').textContent=c.desc;
+c.skills.forEach((s,i)=>{const unlocked=userData.level>=s.unlockLv;document.getElementById('mi-skill'+(i+1)).textContent=unlocked?s.name:'—';document.getElementById('mi-skill'+(i+1)+'-lock').textContent=unlocked?'':` (Lv.${s.unlockLv})`;});
+}
+function switchTab(tab){sfxClick();['char','weapon','mode','shop','event'].forEach(t=>{const el=document.getElementById('tab-'+t);if(el)el.classList.toggle('hidden',t!==tab);const btn=document.querySelector(`.tab-btn[data-tab="${t}"]`);if(btn)btn.classList.toggle('active',t===tab);});}
+function updateMailBadge(){const unread=MAIL_DATA.filter(m=>!userData.mailRead.includes(m.id)).length;const badge=document.getElementById('mail-badge');if(unread>0){badge.textContent=unread;badge.classList.remove('hidden');}else{badge.classList.add('hidden');}}
+function openMail(){document.getElementById('mail-panel').style.display='flex';const list=document.getElementById('mail-list');list.innerHTML='';MAIL_DATA.forEach(m=>{const read=userData.mailRead.includes(m.id);const div=document.createElement('div');div.className='mail-item'+(read?'':' open');div.innerHTML=`<div class="mail-title">${m.title} <span class="mail-date">${m.date}</span></div><div class="mail-body">${m.body}</div>`;div.onclick=()=>{if(!userData.mailRead.includes(m.id)){userData.mailRead.push(m.id);if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}div.classList.add('open');updateMailBadge();}else{div.classList.toggle('open');}};list.appendChild(div);});}
+function closeMail(){document.getElementById('mail-panel').style.display='none';}
+function openSettings(){document.getElementById('settings-panel').style.display='flex';const s=userData.settings;document.getElementById('settings-content').innerHTML=`
+<div class="setting-row"><div><label>Suara</label><div class="desc">Musik & efek</div></div><div class="toggle-switch ${s.music?'active':''}" onclick="toggleSetting('music')"></div></div>
+<div class="setting-row"><div><label>Efek Suara</label><div class="desc">SFX pertempuran</div></div><div class="toggle-switch ${s.sfx?'active':''}" onclick="toggleSetting('sfx')"></div></div>
+<div class="setting-row"><div><label>Getaran</label><div class="desc">Haptic feedback</div></div><div class="toggle-switch ${s.vibration?'active':''}" onclick="toggleSetting('vibration')"></div></div>
+<div class="setting-row"><div><label>Kualitas Grafis</label><div class="desc">${s.graphics}</div></div><select class="field" style="width:auto;padding:4px 8px;margin:0;" onchange="userData.settings.graphics=this.value;saveSettings();"><option value="high" ${s.graphics==='high'?'selected':''}>High</option><option value="medium" ${s.graphics==='medium'?'selected':''}>Medium</option><option value="low" ${s.graphics==='low'?'selected':''}>Low</option></select></div>
+<div class="setting-row"><div><label>Kontrol</label><div class="desc">${s.controls}</div></div><select class="field" style="width:auto;padding:4px 8px;margin:0;" onchange="userData.settings.controls=this.value;saveSettings();"><option value="default" ${s.controls==='default'?'selected':''}>Default</option><option value="alternate" ${s.controls==='alternate'?'selected':''}>Alternate</option><option value="custom" ${s.controls==='custom'?'selected':''}>Custom</option></select></div>
+<div class="setting-row"><div><label>Kaitkan Google</label><div class="desc">${userData.linkedGoogle?'✅ Terkait':'❌ Belum'}</div></div><button class="secondary-btn" style="padding:4px 12px;font-size:12px;" onclick="linkGoogle()">${userData.linkedGoogle?'Batal':'Kaitkan'}</button></div>
+<div class="setting-row"><div><label>Kaitkan Facebook</label><div class="desc">${userData.linkedFacebook?'✅ Terkait':'❌ Belum'}</div></div><button class="secondary-btn" style="padding:4px 12px;font-size:12px;" onclick="linkFacebook()">${userData.linkedFacebook?'Batal':'Kaitkan'}</button></div>
+<div class="setting-row" style="border-bottom:none;"><div><label>Versi</label><div class="desc">The Warrior Survival v2.0</div></div><div style="color:var(--text-dim);font-size:12px;">By JoyWardana</div></div>`;}
+function toggleSetting(key){userData.settings[key]=!userData.settings[key];saveSettings();openSettings();if(key==='music'){if(userData.settings.music)startMusic(currentTheme);else stopMusic();document.getElementById('music-toggle').textContent=userData.settings.music?'♪':'✕';}}
+function saveSettings(){if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}}
+function linkGoogle(){userData.linkedGoogle=!userData.linkedGoogle;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}openSettings();}
+function linkFacebook(){userData.linkedFacebook=!userData.linkedFacebook;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}openSettings();}
+function closeSettings(){document.getElementById('settings-panel').style.display='none';}
+function generateDailyMission(){const missions=[{desc:'Kumpulkan 100 coin',target:100,reward:30,type:'coin'},{desc:'Naik 1 level',target:1,reward:20,type:'level'},{desc:'Kalahkan 20 musuh',target:20,reward:40,type:'kills'},{desc:'Bertahan sampai wave 5',target:5,reward:50,type:'wave'}];const m=missions[Math.floor(Math.random()*missions.length)];document.getElementById('daily-mission').innerHTML=`📋 ${m.desc} → 🪙${m.reward} ${userData.completedMissions.includes(m.desc)?' ✅ Selesai':''}`;}
+
+// ======================= 3D MENU =======================
+let menuRenderer,menuScene,menuCamera,menuCharGroup,menuClock=new THREE.Clock();
+function initMenuScene(){const canvas=document.getElementById('menu-canvas');if(!canvas)return;if(menuRenderer){menuRenderer.dispose();menuRenderer=null;}menuRenderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});menuRenderer.setSize(window.innerWidth,window.innerHeight);menuRenderer.setPixelRatio(Math.min(window.devicePixelRatio,2));menuRenderer.shadowMap.enabled=true;menuScene=new THREE.Scene();menuScene.background=new THREE.Color(0x11151d);menuScene.fog=new THREE.Fog(0x11151d,8,22);menuCamera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);menuCamera.position.set(0,1.5,4.2);menuCamera.lookAt(0,1.1,0);const hemi=new THREE.HemisphereLight(0x8899aa,0x1a1010,0.8);menuScene.add(hemi);const dir=new THREE.DirectionalLight(0xffd9a0,1.3);dir.position.set(4,8,5);dir.castShadow=true;menuScene.add(dir);const rim=new THREE.PointLight(0xc23b3b,0.8,10);rim.position.set(-2,2,-2);menuScene.add(rim);const groundMat=new THREE.MeshStandardMaterial({color:0x1c2028,roughness:1});const ground=new THREE.Mesh(new THREE.CircleGeometry(6,24),groundMat);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;menuScene.add(ground);updateMenuCharacter();animateMenu();window.addEventListener('resize',()=>{if(!menuRenderer)return;menuRenderer.setSize(window.innerWidth,window.innerHeight);menuCamera.aspect=window.innerWidth/window.innerHeight;menuCamera.updateProjectionMatrix();});}
+function updateMenuCharacter(){if(!menuScene)return;if(menuCharGroup)menuScene.remove(menuCharGroup);const c=CHARACTERS[selection.charIdx];const skinColor=c.skins[selection.skinIdx].color;menuCharGroup=buildCharacterMesh(skinColor,c.accent);menuScene.add(menuCharGroup);}
+function buildCharacterMesh(colorHex,accentHex){const g=new THREE.Group();const mat=new THREE.MeshStandardMaterial({color:colorHex,roughness:0.55,metalness:0.25});const accentMat=new THREE.MeshStandardMaterial({color:accentHex,roughness:0.5,metalness:0.3});const skinMat=new THREE.MeshStandardMaterial({color:0xd9b48c,roughness:0.7});const torso=new THREE.Mesh(new THREE.CylinderGeometry(0.42,0.36,0.95,10),mat);torso.position.y=1.05;torso.castShadow=true;const torsoTop=new THREE.Mesh(new THREE.SphereGeometry(0.42,10,8),mat);torsoTop.position.y=1.52;torsoTop.castShadow=true;const torsoBottom=new THREE.Mesh(new THREE.SphereGeometry(0.36,10,8),mat);torsoBottom.position.y=0.58;torsoBottom.castShadow=true;const head=new THREE.Mesh(new THREE.SphereGeometry(0.32,14,14),skinMat);head.position.y=1.95;head.castShadow=true;const helmet=new THREE.Mesh(new THREE.SphereGeometry(0.35,14,10,0,Math.PI*2,0,Math.PI/1.7),accentMat);helmet.position.y=2.0;helmet.castShadow=true;const armGeo=new THREE.CylinderGeometry(0.11,0.11,0.75,8);const armL=new THREE.Mesh(armGeo,mat);armL.position.set(-0.52,1.15,0);armL.rotation.z=0.15;armL.castShadow=true;const armR=new THREE.Mesh(armGeo,mat);armR.position.set(0.52,1.15,0);armR.rotation.z=-0.15;armR.castShadow=true;const legGeo=new THREE.CylinderGeometry(0.14,0.12,0.85,8);const legMat=new THREE.MeshStandardMaterial({color:0x2b2f38,roughness:0.7});const legL=new THREE.Mesh(legGeo,legMat);legL.position.set(-0.2,0.15,0);legL.castShadow=true;const legR=legL.clone();legR.position.x=0.2;const backpack=new THREE.Mesh(new THREE.BoxGeometry(0.5,0.55,0.28),accentMat);backpack.position.set(0,1.15,-0.32);backpack.castShadow=true;const weaponSlot=new THREE.Group();weaponSlot.position.set(0.55,1.2,0.25);const weapon=new THREE.Mesh(new THREE.BoxGeometry(0.13,0.13,1.0),new THREE.MeshStandardMaterial({color:0x1c1c1c,roughness:0.4}));weapon.position.z=0.4;weaponSlot.add(weapon);g.add(torso,torsoTop,torsoBottom,head,helmet,armL,armR,legL,legR,backpack,weaponSlot);g.userData.weaponSlot=weaponSlot;g.userData.weaponMesh=weapon;return g;}
+function animateMenu(){if(document.getElementById('main-menu').style.display!=='flex')return;requestAnimationFrame(animateMenu);const dt=menuClock.getDelta();if(menuCharGroup)menuCharGroup.rotation.y+=dt*0.5;if(menuRenderer&&menuScene&&menuCamera)menuRenderer.render(menuScene,menuCamera);}
+
+// ======================= AUDIO =======================
+let actx=null,musicOn=true,musicInterval=null,currentTheme='menu';
+function ensureAudio(){if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();if(actx.state==='suspended')actx.resume();}
+function playTone(freq,dur,type='sine',gain=0.15,delay=0){if(!actx||!userData.settings.sfx)return;try{const t=actx.currentTime+delay;const osc=actx.createOscillator();const g=actx.createGain();osc.type=type;osc.frequency.setValueAtTime(freq,t);g.gain.setValueAtTime(gain,t);g.gain.exponentialRampToValueAtTime(0.001,t+dur);osc.connect(g).connect(actx.destination);osc.start(t);osc.stop(t+dur);}catch(e){}}
+function sfxClick(){playTone(520,0.08,'square',0.06);}
+function sfxAttack(){playTone(180,0.09,'sawtooth',0.09);}
+function sfxHit(){playTone(90,0.12,'square',0.08);}
+function sfxLevelUp(){[523,659,784,1046].forEach((f,i)=>playTone(f,0.25,'triangle',0.09,i*0.09));}
+function sfxSkill(){playTone(300,0.2,'sawtooth',0.1);playTone(600,0.2,'sine',0.06,0.05);}
+function sfxWave(){playTone(110,0.5,'sawtooth',0.08);playTone(165,0.5,'sawtooth',0.05,0.1);}
+function startMusic(theme){if(!userData.settings.music)return;stopMusic();ensureAudio();if(!musicOn)return;const menu=theme==='menu';const notesMenu=[220,262,196,247];const notesBattle=[110,110,130.8,110];let i=0;musicInterval=setInterval(()=>{if(!userData.settings.music)return;const notes=menu?notesMenu:notesBattle;playTone(notes[i%notes.length],menu?1.1:0.35,menu?'sine':'triangle',menu?0.045:0.06);if(!menu)playTone(notes[i%notes.length]/2,0.3,'square',0.03);i++;},menu?900:420);}
+function stopMusic(){if(musicInterval){clearInterval(musicInterval);musicInterval=null;}}
+function toggleMusic(){musicOn=!musicOn;userData.settings.music=musicOn;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}document.getElementById('music-toggle').textContent=musicOn?'♪':'✕';if(musicOn)startMusic(currentTheme);else stopMusic();}
+
+// ======================= SPIN WHEEL =======================
+let spinAngle=0,isSpinning=false;
+function spinWheel(){if(isSpinning)return;if(userData.coins<50){alert('Koin tidak cukup! Butuh 50 🪙');return;}userData.coins-=50;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}updateCoinDisplay();isSpinning=true;const wheel=document.getElementById('spin-wheel');const extra=Math.random()*360+720;spinAngle+=extra;wheel.style.transform=`rotate(${spinAngle}deg)`;const prizes=['🪙 10','🪙 20','🪙 50','Senjata Free','🪙 100','Skin Rare'];const idx=Math.floor(Math.random()*prizes.length);const result=prizes[idx];setTimeout(()=>{isSpinning=false;document.getElementById('spin-result').textContent='🎉 Hadiah: '+result;if(result.includes('🪙')){const coin=parseInt(result.replace('🪙',''));userData.coins+=coin;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}updateCoinDisplay();}else if(result==='Senjata Free'){const freeW=WEAPONS.filter((w,i)=>!userData.ownedWeapons.includes(i));if(freeW.length>0){const pick=freeW[Math.floor(Math.random()*freeW.length)];const idxW=WEAPONS.indexOf(pick);userData.ownedWeapons.push(idxW);if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}document.getElementById('spin-result').textContent+=' 🔫 '+pick.name;buildMenuLists();}else{document.getElementById('spin-result').textContent+=' (Semua senjata sudah dimiliki!)';}}else if(result==='Skin Rare'){document.getElementById('spin-result').textContent+=' (Skin bonus diterapkan!)';}},4000);}
+function updateEventList(){const events=[{name:'🎯 Double Coin Weekend!',desc:'Semua coin x2'},{name:'⚔️ Boss Rush',desc:'Boss muncul setiap 3 wave'},{name:'🎁 Login Bonus',desc:'Claim 50 coin setiap hari'}];document.getElementById('event-list').innerHTML=events.map(e=>`<div>${e.name} — ${e.desc}</div>`).join('');}
+
+// ======================= WEAPON CRAFT =======================
+function craftWeapon(){if(userData.inventory.weapon_blueprint<1){alert('Butuh Blueprint Senjata! Beli di toko.');return;}userData.inventory.weapon_blueprint--;const names=['Karambit','Machete','Crossbow','Revolver','Battle Axe'];const name=names[Math.floor(Math.random()*names.length)];const dmg=0.8+Math.random()*1.5;const range=1.5+Math.random()*3;const cd=0.2+Math.random()*0.6;const newWeapon={id:'craft_'+Date.now(),name:name,range:Math.round(range*10)/10,dmg:Math.round(dmg*10)/10,cooldown:Math.round(cd*100)/100,desc:'Senjata rakitan kustom.',price:0,crafted:true};WEAPONS.push(newWeapon);userData.ownedWeapons.push(WEAPONS.length-1);if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}document.getElementById('craft-result').textContent='✅ Berhasil membuat '+name+'! (DMG '+newWeapon.dmg+', Range '+newWeapon.range+')';buildMenuLists();sfxClick();}
+
+// ======================= GAME =======================
+const canvas=document.getElementById('game-canvas');let renderer,scene,camera,player;let enemies=[],lootItems=[];let clock=new THREE.Clock();let gameActive=false,paused=false;let move={x:0,z:0};let keys={};let playerState={};let activeChar,activeWeapon,activeDiff,activeMode;let skillCooldowns=[0,0,0],skillMaxs=[8,20,35];let shieldTimer=0,atkSpeedTimer=0,damageBoostTimer=0,coinBoostTimer=0,xpBoostTimer=0;
+
+function launchGame(){sfxClick();document.getElementById('main-menu').style.display='none';document.getElementById('hud').style.display='block';document.getElementById('hud').classList.remove('hidden');document.getElementById('hud-username').textContent=(userData.nickname||'WARRIOR').toUpperCase();if(window.innerWidth<769)document.getElementById('controls').style.display='flex';currentTheme='battle';startMusic('battle');startGame();}
+function backToMenu(){sfxClick();document.getElementById('gameover-screen').style.display='none';document.getElementById('hud').style.display='none';document.getElementById('controls').style.display='none';gameActive=false;document.getElementById('main-menu').style.display='flex';currentTheme='menu';startMusic('menu');animateMenu();}
+
+function initThree(){if(renderer){renderer.dispose();renderer=null;}renderer=new THREE.WebGLRenderer({canvas,antialias:true});renderer.setSize(window.innerWidth,window.innerHeight);renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;scene=new THREE.Scene();scene.background=new THREE.Color(0x87CEEB);scene.fog=new THREE.Fog(0x87CEEB,40,120);const skyGeo=new THREE.SphereGeometry(100,32,32);const skyMat=new THREE.MeshBasicMaterial({color:0x87CEEB,side:THREE.BackSide});const sky=new THREE.Mesh(skyGeo,skyMat);scene.add(sky);const sun=new THREE.Mesh(new THREE.SphereGeometry(3,16,16),new THREE.MeshBasicMaterial({color:0xffdd44}));sun.position.set(30,25,-30);scene.add(sun);const hemi=new THREE.HemisphereLight(0x87CEEB,0x3a5f3a,0.8);scene.add(hemi);const dir=new THREE.DirectionalLight(0xffeedd,1.2);dir.position.set(30,40,20);dir.castShadow=true;dir.shadow.mapSize.set(2048,2048);dir.shadow.camera.near=0.1;dir.shadow.camera.far=100;dir.shadow.camera.left=-50;dir.shadow.camera.right=50;dir.shadow.camera.top=50;dir.shadow.camera.bottom=-50;scene.add(dir);const groundMat=new THREE.MeshStandardMaterial({color:0x3a7a3a,roughness:1,metalness:0});const ground=new THREE.Mesh(new THREE.PlaneGeometry(200,200,60,60),groundMat);ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);for(let i=0;i<40;i++){const x=(Math.random()-0.5)*160,z=(Math.random()-0.5)*160;if(Math.abs(x)<5&&Math.abs(z)<5)continue;const tree=createTree();tree.position.set(x,0,z);scene.add(tree);}for(let i=0;i<25;i++){const x=(Math.random()-0.5)*170,z=(Math.random()-0.5)*170;if(Math.abs(x)<3&&Math.abs(z)<3)continue;const rock=new THREE.Mesh(new THREE.DodecahedronGeometry(0.5+Math.random()*1.5),new THREE.MeshStandardMaterial({color:0x777777,roughness:0.9}));rock.position.set(x,0.3,z);rock.scale.y=0.4+Math.random()*0.3;rock.castShadow=true;rock.receiveShadow=true;scene.add(rock);}for(let i=0;i<8;i++){const x=(Math.random()-0.5)*140,z=(Math.random()-0.5)*140;if(Math.abs(x)<8&&Math.abs(z)<8)continue;const house=createHouse();house.position.set(x,0,z);house.rotation.y=Math.random()*Math.PI*2;scene.add(house);}const waterMat=new THREE.MeshStandardMaterial({color:0x1a6a8a,roughness:0.1,metalness:0.3,transparent:true,opacity:0.7});const water=new THREE.Mesh(new THREE.PlaneGeometry(40,3,10,10),waterMat);water.rotation.x=-Math.PI/2;water.position.set(25,0.1,-15);scene.add(water);const water2=water.clone();water2.position.set(-20,0.1,20);water2.scale.set(1,1,2);scene.add(water2);const c=CHARACTERS[selection.charIdx];const skinColor=c.skins[selection.skinIdx].color;player=buildCharacterMesh(skinColor,c.accent);player.position.set(0,0,0);scene.add(player);updateCamera();window.addEventListener('resize',()=>{if(!renderer)return;renderer.setSize(window.innerWidth,window.innerHeight);camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();});}
+function createTree(){const g=new THREE.Group();const trunk=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.5,1.5+Math.random()*1.5,6),new THREE.MeshStandardMaterial({color:0x6b4423,roughness:0.9}));trunk.position.y=1;trunk.castShadow=true;const crown=new THREE.Mesh(new THREE.SphereGeometry(1+Math.random()*1.5,7,7),new THREE.MeshStandardMaterial({color:0x2d8a2d,roughness:0.8}));crown.position.y=2.5+Math.random()*0.5;crown.castShadow=true;g.add(trunk,crown);return g;}
+function createHouse(){const g=new THREE.Group();const wall=new THREE.Mesh(new THREE.BoxGeometry(2.5,1.8,2.5),new THREE.MeshStandardMaterial({color:0x8a7a5a,roughness:0.8}));wall.position.y=0.9;wall.castShadow=true;wall.receiveShadow=true;const roof=new THREE.Mesh(new THREE.ConeGeometry(2,1.2,4),new THREE.MeshStandardMaterial({color:0x6a2a2a,roughness:0.7}));roof.position.y=2.2;roof.rotation.y=Math.PI/4;roof.castShadow=true;g.add(wall,roof);return g;}
+function updateCamera(){const offset=new THREE.Vector3(0,7,10);camera.position.copy(player.position).add(offset);camera.lookAt(player.position.x,player.position.y+1,player.position.z);}
+function spawnWave(){const count=Math.round((3+playerState.wave*2)*activeDiff.countMul);for(let i=0;i<count;i++){const angle=Math.random()*Math.PI*2;const dist=20+Math.random()*12;spawnEnemy(player.position.x+Math.cos(angle)*dist,player.position.z+Math.sin(angle)*dist);}sfxWave();showCenterMsg('WAVE '+playerState.wave+' — BERTAHAN!');}
+function spawnEnemy(x,z){const baseHp=(18+playerState.wave*5)*activeDiff.hpMul;const isBoss=playerState.wave%5===0&&Math.random()<0.3;const mesh=new THREE.Group();const bodyColor=isBoss?0x8a2a2a:0xc23b3b;const body=new THREE.Mesh(new THREE.CylinderGeometry(isBoss?0.7:0.4,isBoss?0.6:0.34,isBoss?1.5:1.0,8),new THREE.MeshStandardMaterial({color:bodyColor,roughness:0.6}));body.position.y=isBoss?1.0:0.8;body.castShadow=true;const head=new THREE.Mesh(new THREE.SphereGeometry(isBoss?0.5:0.3,10,10),new THREE.MeshStandardMaterial({color:isBoss?0x6a1a1a:0x8a2020,roughness:0.6}));head.position.y=isBoss?1.8:1.4;head.castShadow=true;mesh.add(body,head);mesh.position.set(x,0,z);mesh.userData.isBoss=isBoss;scene.add(mesh);const speed=(isBoss?0.6:(1.3+Math.random()*0.7+playerState.wave*0.03))*activeDiff.spdMul;enemies.push({mesh,hp:baseHp*(isBoss?3:1),maxHp:baseHp*(isBoss?3:1),speed:speed,isBoss:isBoss,damage:(isBoss?25:10)*activeDiff.hpMul});}
+function showCenterMsg(text){const el=document.getElementById('center-msg');el.textContent=text;el.style.opacity=1;setTimeout(()=>{el.style.opacity=0;},1500);}
+function updateHUD(){const hpPct=Math.max(0,(playerState.hp/playerState.maxHp*100));document.getElementById('hp-bar').style.width=hpPct+'%';document.getElementById('hp-text').textContent=Math.max(0,Math.round(playerState.hp))+'/'+playerState.maxHp;document.getElementById('xp-bar').style.width=(playerState.xp/playerState.xpNeed*100)+'%';document.getElementById('xp-text').textContent=playerState.xp+'/'+playerState.xpNeed;document.getElementById('hud-level').textContent='LV '+playerState.level;document.getElementById('wave-num').textContent=playerState.wave;document.getElementById('hud-coins').textContent=userData.coins||0;const cdPct=skillCooldowns[0]>0?(1-skillCooldowns[0]/skillMaxs[0])*360:360;document.getElementById('skill-cd').style.background=`conic-gradient(rgba(0,0,0,0.7) ${cdPct}deg, transparent ${cdPct}deg)`;}
+function gainXP(amount){const boost=xpBoostTimer>0?1.25:1;playerState.xp+=Math.round(amount*boost);if(playerState.xp>=playerState.xpNeed){playerState.xp-=playerState.xpNeed;playerState.level++;playerState.xpNeed=Math.round(playerState.xpNeed*1.35);playerState.maxHp+=18;playerState.hp=playerState.maxHp;sfxLevelUp();showCenterMsg('LEVEL UP! LV '+playerState.level);userData.level=playerState.level;userData.xp=playerState.xp;userData.xpNeed=playerState.xpNeed;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}refreshCharInfo();}userData.xp=playerState.xp;userData.xpNeed=playerState.xpNeed;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}}
+function addCoins(amount){const boost=coinBoostTimer>0?1.2:1;const gained=Math.round(amount*boost);userData.coins+=gained;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}updateCoinDisplay();}
+function togglePause(){paused=!paused;if(paused)showCenterMsg('⏸ PAUSED');else{showCenterMsg('▶️ RESUME');clock.getDelta();}}
+
+window.addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.code==='Space'){e.preventDefault();attack();}if(e.key.toLowerCase()==='e')useSkill();if(e.key==='p'||e.key==='P')togglePause();});
+window.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+window.addEventListener('mousedown',()=>{if(gameActive&&!paused)attack();});
+const joyZone=document.getElementById('joy-zone'),joyStick=document.getElementById('joy-stick');let joyActive=false,joyOrigin={x:0,y:0};
+joyZone.addEventListener('touchstart',e=>{joyActive=true;const rect=joyZone.getBoundingClientRect();joyOrigin={x:rect.left+rect.width/2,y:rect.top+rect.height/2};});
+joyZone.addEventListener('touchmove',e=>{if(!joyActive)return;const t=e.touches[0];let dx=t.clientX-joyOrigin.x,dy=t.clientY-joyOrigin.y;const max=36,len=Math.hypot(dx,dy);if(len>max){dx=dx/len*max;dy=dy/len*max;}joyStick.style.transform=`translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px))`;move.x=dx/max;move.z=dy/max;});
+joyZone.addEventListener('touchend',()=>{joyActive=false;move.x=0;move.z=0;joyStick.style.transform='translate(-50%,-50%)';});
+
+function attack(){if(!gameActive||paused)return;if(playerState.attackCooldown>0)return;const cd=activeWeapon.cooldown*(atkSpeedTimer>0?0.5:1);playerState.attackCooldown=cd;sfxAttack();const dmgMul=damageBoostTimer>0?1.5:1;let hitAny=false;enemies.forEach(en=>{const d=player.position.distanceTo(en.mesh.position);if(d<activeWeapon.range){const dmg=10*activeWeapon.dmg*activeChar.dmgMod*dmgMul;en.hp-=dmg;hitAny=true;}});if(hitAny)sfxHit();}
+function useSkill(){if(!gameActive||paused)return;if(skillCooldowns[0]>0)return;const c=activeChar;const skill=c.skills[0];if(userData.level<skill.unlockLv){showCenterMsg('Skill terkunci! Butuh Lv.'+skill.unlockLv);return;}skillCooldowns[0]=skillMaxs[0];sfxSkill();const id=c.id;if(id==='raka'){atkSpeedTimer=5;damageBoostTimer=5;showCenterMsg('SUPPRESSING FIRE!');}else if(id==='sari'){let nearest=null,nd=Infinity;enemies.forEach(en=>{const d=player.position.distanceTo(en.mesh.position);if(d<nd){nd=d;nearest=en;}});if(nearest){player.position.copy(nearest.mesh.position).add(new THREE.Vector3(0.8,0,0.8));nearest.hp-=40*activeChar.dmgMod;sfxHit();showCenterMsg('DASH STRIKE!');}else showCenterMsg('Tidak ada musuh dekat!');}else if(id==='bara'){shieldTimer=5;playerState.hp=Math.min(playerState.maxHp,playerState.hp+playerState.maxHp*0.2);showCenterMsg('FORTIFY!');}else if(id==='nadia'){enemies.forEach(en=>{const d=player.position.distanceTo(en.mesh.position);if(d<8)en.hp-=45*activeChar.dmgMod;});showCenterMsg('FOCUS SHOT!');}else if(id==='kaito'){enemies.forEach(en=>{const d=player.position.distanceTo(en.mesh.position);if(d<4)en.hp-=35*activeChar.dmgMod;});showCenterMsg('IAI SLASH!');}}
+
+function animate(){if(!gameActive)return;requestAnimationFrame(animate);if(paused){renderer.render(scene,camera);return;}const dt=Math.min(clock.getDelta(),0.05);let mx=move.x,mz=move.z;if(keys['w']||keys['arrowup'])mz-=1;if(keys['s']||keys['arrowdown'])mz+=1;if(keys['a']||keys['arrowleft'])mx-=1;if(keys['d']||keys['arrowright'])mx+=1;const len=Math.hypot(mx,mz);if(len>0.05){mx/=len;mz/=len;player.position.x+=mx*playerState.speed*dt;player.position.z+=mz*playerState.speed*dt;player.rotation.y=Math.atan2(mx,mz);}if(playerState.attackCooldown>0)playerState.attackCooldown-=dt;for(let i=0;i<skillCooldowns.length;i++)if(skillCooldowns[i]>0)skillCooldowns[i]-=dt;if(atkSpeedTimer>0)atkSpeedTimer-=dt;if(shieldTimer>0)shieldTimer-=dt;if(damageBoostTimer>0)damageBoostTimer-=dt;if(coinBoostTimer>0)coinBoostTimer-=dt;if(xpBoostTimer>0)xpBoostTimer-=dt;let allDead=true;enemies.forEach(en=>{if(en.hp<=0){if(en.mesh.parent){scene.remove(en.mesh);const xpGain=en.isBoss?60:15,coinGain=en.isBoss?40:8;gainXP(xpGain);addCoins(coinGain);if(Math.random()<0.15)spawnLoot(en.mesh.position.clone());}return;}allDead=false;const dir=new THREE.Vector3().subVectors(player.position,en.mesh.position);const dist=dir.length();dir.normalize();if(dist>1.3){en.mesh.position.x+=dir.x*en.speed*dt;en.mesh.position.z+=dir.z*en.speed*dt;}else{const dmg=(shieldTimer>0?en.damage*0.3:en.damage)*dt*3;playerState.hp-=dmg;}en.mesh.lookAt(player.position.x,en.mesh.position.y,player.position.z);});enemies=enemies.filter(en=>en.hp>0);lootItems.forEach(loot=>{const d=player.position.distanceTo(loot.mesh.position);if(d<2){const val=loot.value||10;addCoins(val);scene.remove(loot.mesh);showCenterMsg('+🪙'+val);}});lootItems=lootItems.filter(l=>l.mesh.parent);if(allDead&&enemies.length===0){playerState.wave++;userData.totalWaves++;if(playerState.wave>userData.highestWave)userData.highestWave=playerState.wave;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}spawnWave();checkMissions();}updateCamera();updateHUD();if(playerState.hp<=0){endGame();return;}renderer.render(scene,camera);}
+function spawnLoot(position){const g=new THREE.Group();const coin=new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,0.05,8),new THREE.MeshStandardMaterial({color:0xf1c40f,metalness:0.6,roughness:0.2}));coin.position.y=0.2;g.add(coin);g.position.copy(position);g.position.y=0.1;scene.add(g);lootItems.push({mesh:g,value:5+Math.floor(Math.random()*15)});}
+function checkMissions(){const missions=[{desc:'Kumpulkan 100 coin',target:100,reward:30,type:'coin'},{desc:'Naik 1 level',target:1,reward:20,type:'level'},{desc:'Kalahkan 20 musuh',target:20,reward:40,type:'kills'},{desc:'Bertahan sampai wave 5',target:5,reward:50,type:'wave'}];missions.forEach(m=>{if(userData.completedMissions.includes(m.desc))return;let done=false;if(m.type==='coin'&&userData.coins>=m.target)done=true;if(m.type==='level'&&userData.level>=m.target)done=true;if(m.type==='kills'&&userData.totalKills>=m.target)done=true;if(m.type==='wave'&&userData.highestWave>=m.target)done=true;if(done){userData.completedMissions.push(m.desc);userData.coins+=m.reward;showCenterMsg('✅ Misi Selesai! +🪙'+m.reward);if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}updateCoinDisplay();generateDailyMission();}});}
+function endGame(){gameActive=false;stopMusic();if(userData){if(playerState.wave>(userData.highestWave||0))userData.highestWave=playerState.wave;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}}document.getElementById('gameover-stats').textContent=`${userData.nickname||'Warrior'} (${activeChar.name.split(' "')[0]}) bertahan hingga wave ${playerState.wave}, level ${playerState.level} — mode ${activeMode.name}.`;document.getElementById('gameover-screen').style.display='flex';}
+function resetGameState(){if(scene){enemies.forEach(en=>scene.remove(en.mesh));lootItems.forEach(l=>scene.remove(l.mesh));}enemies=[];lootItems=[];skillCooldowns=[0,0,0];atkSpeedTimer=0;shieldTimer=0;damageBoostTimer=0;coinBoostTimer=0;xpBoostTimer=0;move={x:0,z:0};}
+function restartGame(){sfxClick();document.getElementById('gameover-screen').style.display='none';currentTheme='battle';startMusic('battle');startGame();}
+function startGame(){activeChar=CHARACTERS[selection.charIdx];activeWeapon=WEAPONS[selection.weaponIdx];activeMode=MODES[selection.modeIdx];activeDiff=DIFFS[selection.diffIdx];const baseHp=100*activeChar.hpMod;playerState={hp:baseHp,maxHp:Math.round(baseHp),level:userData.level||1,xp:userData.xp||0,xpNeed:userData.xpNeed||50,wave:1,speed:5.2*activeChar.spdMod,attackCooldown:0};userData.selectedChar=selection.charIdx;userData.selectedSkin=selection.skinIdx;userData.selectedWeapon=selection.weaponIdx;if(!userData.isGuest){allUsers[userData.username]=userData;localStorage.setItem('warrior_users',JSON.stringify(allUsers));}if(!renderer)initThree();else{scene.remove(player);const c=CHARACTERS[selection.charIdx];const skinColor=c.skins[selection.skinIdx].color;player=buildCharacterMesh(skinColor,c.accent);player.position.set(0,0,0);scene.add(player);}resetGameState();gameActive=true;paused=false;spawnWave();clock.getDelta();animate();}
+
+console.log('THE WARRIOR SURVIVAL by JoyWardana');
+console.log('YouTube: @JoyWardanaa');
+</script>
+</body>
+</html>
